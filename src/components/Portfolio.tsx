@@ -76,7 +76,7 @@ function Portfolio() {
   const [activeSkillCategory, setActiveSkillCategory] = useState("all");
 
   const fullText =
-    "Hello, I'm MD Salah - founder, developer, designer & engineer";
+    "Hello, I'm MD Salah - developer, designer & engineer";
 
   useEffect(() => {
     let index = 0;
