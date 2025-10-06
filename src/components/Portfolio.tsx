@@ -800,7 +800,7 @@ function Portfolio() {
 
             <div className="flex flex-wrap justify-center gap-6">
               <a
-                href="mailto:hello@mdsalah.dev"
+                href="mailto:thisissalah.dev@gmail.com"
                 className={`flex items-center space-x-2 p-4 border rounded-lg transition-all duration-300 hover:scale-105 ${
                   isDark
                     ? "border-slate-700 hover:border-slate-600 hover:bg-slate-800/50"
@@ -812,7 +812,7 @@ function Portfolio() {
               </a>
 
               <a
-                href="https://github.com/mdsalah"
+                href="https://github.com/Salah-XD"
                 className={`flex items-center space-x-2 p-4 border rounded-lg transition-all duration-300 hover:scale-105 ${
                   isDark
                     ? "border-slate-700 hover:border-slate-600 hover:bg-slate-800/50"
@@ -824,7 +824,7 @@ function Portfolio() {
               </a>
 
               <a
-                href="https://linkedin.com/in/mdsalah"
+                href="https://www.linkedin.com/in/thisis-salah/"
                 className={`flex items-center space-x-2 p-4 border rounded-lg transition-all duration-300 hover:scale-105 ${
                   isDark
                     ? "border-slate-700 hover:border-slate-600 hover:bg-slate-800/50"
@@ -835,7 +835,7 @@ function Portfolio() {
                 <span className="font-mono">LinkedIn</span>
               </a>
 
-              <a
+              {/* <a
                 href="https://twitter.com/mdsalah"
                 className={`flex items-center space-x-2 p-4 border rounded-lg transition-all duration-300 hover:scale-105 ${
                   isDark
@@ -845,7 +845,7 @@ function Portfolio() {
               >
                 <Twitter className="w-5 h-5" />
                 <span className="font-mono">Twitter</span>
-              </a>
+              </a> */}
             </div>
           </div>
         </div>
