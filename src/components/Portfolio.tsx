@@ -283,7 +283,7 @@ function Portfolio() {
 
           <div className="grid md:grid-cols-2 gap-12">
             <div className="space-y-8">
-              <div
+              {/* <div
                 className={`p-6 border rounded-lg transition-all duration-300 hover:scale-105 ${
                   isDark
                     ? "border-slate-700 bg-slate-800/50 hover:border-slate-600"
@@ -302,7 +302,7 @@ function Portfolio() {
                   Building companies from 0 to 1. Strategic vision meets
                   execution.
                 </p>
-              </div>
+              </div> */}
 
               <div
                 className={`p-6 border rounded-lg transition-all duration-300 hover:scale-105 ${
