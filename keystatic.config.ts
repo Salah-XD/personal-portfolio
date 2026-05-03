@@ -40,6 +40,12 @@ export default config({
         authorBio: fields.text({ label: 'Author Bio', defaultValue: 'Founder, Developer, Designer & Engineer' }),
         content: fields.markdoc({
           label: 'Content',
+          options: {
+            image: {
+              directory: 'public/images/blog',
+              publicPath: '/images/blog/',
+            },
+          },
         }),
       },
     }),

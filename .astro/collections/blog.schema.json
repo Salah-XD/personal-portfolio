@@ -11,16 +11,19 @@
           "type": "string"
         },
         "excerpt": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "readTime": {
-          "type": "string"
+          "type": "string",
+          "default": ""
         },
         "tags": {
           "type": "array",
           "items": {
             "type": "string"
-          }
+          },
+          "default": []
         },
         "category": {
           "type": "string"
@@ -37,10 +40,6 @@
       },
       "required": [
         "title",
-        "date",
-        "excerpt",
-        "readTime",
-        "tags",
         "category",
         "author",
         "authorBio"
