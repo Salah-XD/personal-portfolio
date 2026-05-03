@@ -87,10 +87,8 @@ function tryOrUndefined(fn) {
 
 const config = config$1({
   storage: {
-    // We use "local" mode when running the dev server.
-    // It will automatically switch to GitHub when deployed if we configure it,
-    // but for now local is perfect for dev.
-    kind: "local"
+    kind: "github",
+    repo: "Salah-XD/personal-portfolio"
   },
   collections: {
     blog: collection({
