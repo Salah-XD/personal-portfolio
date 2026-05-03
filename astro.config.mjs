@@ -10,4 +10,9 @@ export default defineConfig({
   output: 'static',
   adapter: vercel(),
   integrations: [react(), tailwind(), keystatic()],
+  security: {
+    allowedDomains: [
+      { hostname: '**.vercel.app', protocol: 'https' },
+    ],
+  },
 });
