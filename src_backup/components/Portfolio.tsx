@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { Link } from "react-router-dom";
 import {
   Moon,
   Sun,
@@ -182,14 +182,14 @@ function Portfolio() {
             >
               ./metrics
             </button>
-            <a
-              href="/blog"
+            <Link
+              to="/blog"
               className={`hover:${
                 isDark ? "text-emerald-400" : "text-slate-600"
               } transition-colors`}
             >
               ./blog
-            </a>
+            </Link>
             <button
               onClick={() => scrollToSection("contact", "~/contact")}
               className={`hover:${
@@ -698,15 +698,15 @@ function Portfolio() {
 
           <div className="flex items-center justify-between mb-8">
             <h2 className="font-mono text-2xl">Latest Posts</h2>
-            <a
-              href="/blog"
+            <Link
+              to="/blog"
               className={`flex items-center space-x-2 font-mono text-sm hover:${
                 isDark ? "text-emerald-400" : "text-slate-600"
               } transition-colors`}
             >
               <span>View all</span>
               <ArrowRight className="w-4 h-4" />
-            </a>
+            </Link>
           </div>
 
           <div className="space-y-6">
@@ -733,9 +733,9 @@ function Portfolio() {
                 slug: "idea-to-mvp-journey",
               },
             ].map((post) => (
-              <a
+              <Link
                 key={post.slug}
-                href={`/blog/${post.slug}`}
+                to={`/blog/${post.slug}`}
                 className={`block p-6 border rounded-lg transition-all duration-300 hover:scale-105 ${
                   isDark
                     ? "border-slate-700 bg-slate-800/50 hover:border-slate-600"
@@ -767,7 +767,7 @@ function Portfolio() {
                 >
                   {post.excerpt}
                 </p>
-              </a>
+              </Link>
             ))}
           </div>
         </div>

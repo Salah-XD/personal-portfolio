@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import BlogList from '../../components/BlogList';
+
+const posts = await getCollection('blog');
+
+// Format posts to match the interface BlogList expects
+const formattedPosts = posts.map(post => ({
+  id: post.id,
+  slug: post.id, // Astro 5 content collections use 'id' as the slug instead of 'slug' property sometimes, but 'slug' works if it's available. We'll use id as fallback.
+  title: post.data.title,
+  date: post.data.date,
+  excerpt: post.data.excerpt,
+  readTime: post.data.readTime,
+  tags: post.data.tags,
+  category: post.data.category
+}));
+---
+
+<Layout title="Blog | MD Salah">
+  <BlogList initialPosts={formattedPosts} client:load />
+</Layout>

@@ -1,0 +1,28 @@
+---
+import '../index.css';
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="en" class="antialiased">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="MD Salah - Developer, Designer & Engineer" />
+    <title>{title}</title>
+    <!-- Favicon could go here -->
+    <script is:inline>
+      // The theme logic is handled in React components for now, 
+      // but if we need a global inline script to prevent flash of unstyled content, it goes here.
+      // Current portfolio defaults to dark.
+    </script>
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, Calendar, Clock, Search, Tag } from 'lucide-react';
 
 interface BlogPost {
@@ -12,18 +13,77 @@ interface BlogPost {
   category: string;
 }
 
-interface BlogListProps {
-  initialPosts: BlogPost[];
-}
+const blogPosts: BlogPost[] = [
+  {
+    id: '1',
+    title: 'Building Scalable Systems: Lessons from the Trenches',
+    slug: 'building-scalable-systems',
+    date: '2024-01-15',
+    excerpt: 'Key insights on architecture decisions that make or break startups. From monoliths to microservices, database choices, and scaling challenges.',
+    readTime: '8 min read',
+    tags: ['Architecture', 'Scaling', 'Backend'],
+    category: 'Engineering'
+  },
+  {
+    id: '2',
+    title: 'The Art of Minimal Design in Tech Products',
+    slug: 'minimal-design-tech-products',
+    date: '2024-01-08',
+    excerpt: 'Why less is more when it comes to user experience and product design. Exploring the principles that make interfaces truly intuitive.',
+    readTime: '5 min read',
+    tags: ['Design', 'UX', 'Minimalism'],
+    category: 'Design'
+  },
+  {
+    id: '3',
+    title: 'From Idea to MVP: A Founder\'s Journey',
+    slug: 'idea-to-mvp-journey',
+    date: '2024-01-01',
+    excerpt: 'The complete process of taking a concept from whiteboard to market. Real stories, hard lessons, and practical frameworks.',
+    readTime: '12 min read',
+    tags: ['Startup', 'MVP', 'Product'],
+    category: 'Business'
+  },
+  {
+    id: '4',
+    title: 'Modern React Patterns for 2024',
+    slug: 'modern-react-patterns-2024',
+    date: '2023-12-20',
+    excerpt: 'Latest React patterns, hooks, and best practices that every developer should know. From custom hooks to performance optimization.',
+    readTime: '10 min read',
+    tags: ['React', 'JavaScript', 'Frontend'],
+    category: 'Development'
+  },
+  {
+    id: '5',
+    title: 'The Psychology of Developer Tools',
+    slug: 'psychology-developer-tools',
+    date: '2023-12-10',
+    excerpt: 'How the tools we use shape our thinking and productivity. An exploration of developer experience and cognitive load.',
+    readTime: '7 min read',
+    tags: ['DX', 'Tools', 'Psychology'],
+    category: 'Productivity'
+  },
+  {
+    id: '6',
+    title: 'Building in Public: Lessons Learned',
+    slug: 'building-in-public-lessons',
+    date: '2023-11-25',
+    excerpt: 'What I learned from sharing my startup journey publicly. The good, the bad, and the unexpected benefits.',
+    readTime: '6 min read',
+    tags: ['Transparency', 'Community', 'Startup'],
+    category: 'Business'
+  }
+];
 
 const categories = ['All', 'Engineering', 'Design', 'Business', 'Development', 'Productivity'];
 
-function BlogList({ initialPosts }: BlogListProps) {
+function BlogList() {
   const [isDark, setIsDark] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const filteredPosts = initialPosts.filter(post => {
+  const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
@@ -45,13 +105,13 @@ function BlogList({ initialPosts }: BlogListProps) {
       }`}>
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-6">
-            <a 
-              href="/"
+            <Link 
+              to="/"
               className={`flex items-center space-x-2 font-mono text-sm hover:${isDark ? 'text-emerald-400' : 'text-slate-600'} transition-colors`}
             >
               <ArrowLeft className="w-4 h-4" />
               <span>cd ..</span>
-            </a>
+            </Link>
             
             <button
               onClick={() => setIsDark(!isDark)}
@@ -159,11 +219,11 @@ function BlogList({ initialPosts }: BlogListProps) {
                   </span>
                 </div>
                 
-                <a href={`/blog/${post.slug}`}>
+                <Link to={`/blog/${post.slug}`}>
                   <h2 className={`font-mono text-xl md:text-2xl mb-3 hover:${isDark ? 'text-emerald-400' : 'text-slate-600'} transition-colors`}>
                     {post.title}
                   </h2>
-                </a>
+                </Link>
                 
                 <p className={`${isDark ? 'text-slate-300' : 'text-slate-600'} leading-relaxed mb-4`}>
                   {post.excerpt}
@@ -188,12 +248,12 @@ function BlogList({ initialPosts }: BlogListProps) {
                     </div>
                   </div>
                   
-                  <a
-                    href={`/blog/${post.slug}`}
+                  <Link
+                    to={`/blog/${post.slug}`}
                     className={`font-mono text-sm hover:${isDark ? 'text-emerald-400' : 'text-slate-600'} transition-colors`}
                   >
                     Read more →
-                  </a>
+                  </Link>
                 </div>
               </article>
             ))}
