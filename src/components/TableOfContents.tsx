@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { List, X } from 'lucide-react';
 
 export interface Heading {
@@ -64,7 +65,10 @@ export default function TableOfContents({ headings }: Props) {
   return (
     <>
       {/* Desktop sticky sidebar */}
-      <aside className="hidden lg:block sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto pr-4">
+      <aside
+        data-lenis-prevent
+        className="hidden lg:block sticky top-24 self-start max-h-[calc(100vh-8rem)] overflow-y-auto pr-4 scrollbar-thin overscroll-contain"
+      >
         <p className="font-mono text-xs uppercase tracking-wider mb-3 text-slate-500 dark:text-emerald-400">
           ./toc
         </p>
@@ -81,13 +85,15 @@ export default function TableOfContents({ headings }: Props) {
         <List className="w-5 h-5" />
       </button>
 
-      {openMobile && (
+      {openMobile && typeof document !== 'undefined' && createPortal(
         <div
-          className="lg:hidden fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm"
+          data-lenis-prevent
+          className="lg:hidden fixed inset-0 z-50 bg-slate-200/60 dark:bg-black/60 backdrop-blur-lg"
           onClick={() => setOpenMobile(false)}
         >
           <div
-            className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto rounded-t-2xl border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-6"
+            data-lenis-prevent
+            className="absolute bottom-0 left-0 right-0 max-h-[70vh] overflow-y-auto scrollbar-thin overscroll-contain rounded-t-2xl border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 p-6"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-4">
@@ -105,7 +111,8 @@ export default function TableOfContents({ headings }: Props) {
             </div>
             {list}
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

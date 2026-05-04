@@ -2,6 +2,39 @@
 // All copy below is placeholder. Replace it with real projects, real skills,
 // and accurate impact statements before sharing the site widely.
 
+export interface Author {
+  name: string;
+  handle: string;
+  role: string;
+  location: string;
+  email: string;
+  github: string;
+  linkedin: string;
+  twitter?: string;
+  bio: string[]; // each item is one paragraph
+  currentlyBuilding: { name: string; url: string; description: string };
+}
+
+export const author: Author = {
+  name: 'MD Salah',
+  handle: 'Salah-XD',
+  role: 'Developer · Designer · Engineer',
+  location: 'India',
+  email: 'thisissalah.dev@gmail.com',
+  github: 'https://github.com/Salah-XD',
+  linkedin: 'https://www.linkedin.com/in/thisis-salah/',
+  bio: [
+    "I build software products end to end — from the first sketch to the deploy pipeline. I care about systems that are simple to reason about, interfaces that get out of the way, and shipping things people actually use.",
+    "Most of my work lately has been at the intersection of frontend craft and small-team engineering: making fast static sites, designing component libraries, and keeping the deploy story boring.",
+    "I write here about the technical stuff I run into, the design choices behind products I admire, and the occasional founder-y note. Subscribe via the newsletter or RSS if any of that sounds useful.",
+  ],
+  currentlyBuilding: {
+    name: 'QSAT',
+    url: 'https://qsat.diy',
+    description: 'a personal product I am working on right now',
+  },
+};
+
 export interface Project {
   name: string;
   description: string;

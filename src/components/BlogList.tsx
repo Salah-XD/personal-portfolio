@@ -4,6 +4,7 @@ import { ArrowLeft, Calendar, Clock, Search, Tag } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import SearchPalette from './SearchPalette';
 import SmoothScroll from './SmoothScroll';
+import NewsletterForm from './NewsletterForm';
 import { useEntranceAnimations } from '../lib/useEntranceAnimations';
 
 interface BlogPost {
@@ -45,7 +46,10 @@ function BlogList({ initialPosts }: BlogListProps) {
     <SmoothScroll>
     <div ref={rootRef} className="min-h-screen transition-colors duration-300">
       {/* Header */}
-      <header className="border-b border-slate-200 dark:border-slate-700">
+      <header
+        data-nav-sticky
+        className="sticky top-0 z-50 backdrop-blur-md bg-slate-50/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-700 transition-transform duration-300 will-change-transform"
+      >
         <div className="max-w-4xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-6 gap-3">
             <a
@@ -187,6 +191,10 @@ function BlogList({ initialPosts }: BlogListProps) {
               </p>
             </div>
           )}
+
+          <div className="mt-16">
+            <NewsletterForm variant="card" source="blog-index" />
+          </div>
         </div>
       </section>
     </div>

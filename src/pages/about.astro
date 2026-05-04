@@ -1,0 +1,140 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ArrowLeft, Github, Linkedin, Mail, MapPin, Terminal } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
+import SearchPalette from '../components/SearchPalette';
+import { author } from '../config/portfolio';
+---
+
+<Layout
+  title={`About | ${author.name}`}
+  description={`whoami — ${author.name}, ${author.role}.`}
+  ogType="website"
+>
+  <div class="min-h-screen transition-colors duration-300">
+    <header class="border-b border-slate-200 dark:border-slate-700">
+      <div class="max-w-4xl mx-auto px-4 py-6 flex items-center justify-between gap-3">
+        <a
+          href="/"
+          class="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>cd ..</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <SearchPalette client:load />
+          <ThemeToggle client:load />
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-12 space-y-10">
+      <section>
+        <div class="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
+          salah@portfolio:~$ whoami
+        </div>
+        <h1 class="font-mono text-3xl sm:text-4xl md:text-5xl mb-4 leading-tight">
+          {author.name}
+        </h1>
+        <p class="font-mono text-base md:text-lg text-slate-600 dark:text-slate-300">
+          {author.role}
+        </p>
+
+        <div class="mt-6 flex flex-wrap items-center gap-4 font-mono text-sm">
+          <span class="flex items-center gap-2 text-slate-500 dark:text-slate-400">
+            <MapPin className="w-4 h-4" />
+            {author.location}
+          </span>
+          <a
+            href={`mailto:${author.email}`}
+            class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
+          >
+            <Mail className="w-4 h-4" />
+            {author.email}
+          </a>
+          <a
+            href={author.github}
+            target="_blank"
+            rel="noreferrer"
+            class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
+          >
+            <Github className="w-4 h-4" />
+            {author.handle}
+          </a>
+          <a
+            href={author.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            class="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
+          >
+            <Linkedin className="w-4 h-4" />
+            LinkedIn
+          </a>
+        </div>
+      </section>
+
+      <section>
+        <div class="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
+          salah@portfolio:~$ cat about.md
+        </div>
+        <div class="prose prose-slate dark:prose-invert max-w-none">
+          {author.bio.map((para) => <p>{para}</p>)}
+        </div>
+      </section>
+
+      <section>
+        <div class="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
+          salah@portfolio:~$ ps -ef | head
+        </div>
+        <a
+          href={author.currentlyBuilding.url}
+          target="_blank"
+          rel="noreferrer"
+          class="block p-6 border rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600 transition-colors"
+        >
+          <div class="flex items-center gap-3 mb-2">
+            <Terminal className="w-5 h-5 text-slate-600 dark:text-emerald-400" />
+            <span class="font-mono text-lg">{author.currentlyBuilding.name}</span>
+            <span class="font-mono text-xs px-2 py-0.5 rounded bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30">
+              in progress
+            </span>
+          </div>
+          <p class="text-slate-600 dark:text-slate-300 font-mono text-sm">
+            {author.currentlyBuilding.description}
+          </p>
+        </a>
+      </section>
+
+      <section>
+        <div class="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
+          salah@portfolio:~$ ls -t blog/ | head -5
+        </div>
+        <p class="font-mono text-sm text-slate-600 dark:text-slate-300 mb-4">
+          I write about tech, design, and building products.
+        </p>
+        <div class="flex flex-wrap gap-3 font-mono text-sm">
+          <a
+            href="/blog"
+            class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          >
+            ./blog →
+          </a>
+          <a
+            href="/rss.xml"
+            class="px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+          >
+            ./rss.xml →
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-700 py-8 mt-12">
+      <div class="max-w-4xl mx-auto px-4">
+        <p class="font-mono text-xs sm:text-sm text-slate-500 dark:text-emerald-400 break-words">
+          salah@portfolio:~$ exit
+        </p>
+      </div>
+    </footer>
+  </div>
+</Layout>

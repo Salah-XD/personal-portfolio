@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { Menu, X } from 'lucide-react';
 
 interface NavItem {
@@ -40,13 +41,15 @@ export default function MobileNav({ items, prompt = 'salah@portfolio:~$' }: Mobi
         <Menu className="w-5 h-5" />
       </button>
 
-      {open && (
+      {open && typeof document !== 'undefined' && createPortal(
         <div
-          className="md:hidden fixed inset-0 z-[60] bg-slate-900/40 backdrop-blur-sm animate-fade-up"
+          data-lenis-prevent
+          className="md:hidden fixed inset-0 z-[60] bg-slate-200/60 dark:bg-black/60 backdrop-blur-lg animate-fade-up"
           onClick={() => setOpen(false)}
         >
           <div
-            className="absolute right-0 top-0 h-full w-72 max-w-[85vw] bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 p-6 flex flex-col"
+            data-lenis-prevent
+            className="absolute right-0 top-0 h-full w-72 max-w-[85vw] overflow-y-auto scrollbar-thin overscroll-contain bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 p-6 flex flex-col"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-8">
@@ -92,7 +95,8 @@ export default function MobileNav({ items, prompt = 'salah@portfolio:~$' }: Mobi
               })}
             </nav>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

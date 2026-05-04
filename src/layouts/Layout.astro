@@ -1,5 +1,10 @@
 ---
 import '../index.css';
+import Analytics from '@vercel/analytics/astro';
+import SpeedInsights from '@vercel/speed-insights/astro';
+import BootSequence from '../components/BootSequence';
+import Konami from '../components/Konami';
+import TerminalCursor from '../components/TerminalCursor';
 
 interface Props {
   title: string;
@@ -88,6 +93,11 @@ const resolvedOgImage = ogImage
   </head>
   <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
     <slot />
+    <BootSequence client:load />
+    <Konami client:load />
+    <TerminalCursor client:load />
+    <Analytics />
+    <SpeedInsights />
 
     <script>
       // Inject copy buttons into rendered code blocks (Shiki output uses <pre><code>).
@@ -117,6 +127,36 @@ const resolvedOgImage = ogImage
       };
       enhancePre();
       document.addEventListener('astro:page-load', enhancePre);
+    </script>
+
+    <script>
+      // Hide nav on scroll down, show on scroll up.
+      // Re-queries on each tick so islands hydrated after init still get tracked.
+      let lastY = window.scrollY;
+      let ticking = false;
+      const applyNavScroll = () => {
+        const y = window.scrollY;
+        const delta = y - lastY;
+        if (Math.abs(delta) < 6) {
+          ticking = false;
+          return;
+        }
+        const hide = y > 80 && delta > 0;
+        document
+          .querySelectorAll<HTMLElement>('[data-nav-sticky]')
+          .forEach((n) => n.classList.toggle('-translate-y-full', hide));
+        lastY = y;
+        ticking = false;
+      };
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (ticking) return;
+          ticking = true;
+          requestAnimationFrame(applyNavScroll);
+        },
+        { passive: true }
+      );
     </script>
   </body>
 </html>

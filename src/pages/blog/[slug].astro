@@ -8,6 +8,7 @@ import ReadingProgress from '../../components/ReadingProgress';
 import TableOfContents from '../../components/TableOfContents';
 import PostEngagement from '../../components/PostEngagement';
 import Comments from '../../components/Comments';
+import NewsletterForm from '../../components/NewsletterForm';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -43,7 +44,10 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
   <ReadingProgress client:load />
 
   <div class="min-h-screen transition-colors duration-300">
-    <header class="border-b border-slate-200 dark:border-slate-700">
+    <header
+      data-nav-sticky
+      class="sticky top-0 z-50 backdrop-blur-md bg-slate-50/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-700 transition-transform duration-300 will-change-transform"
+    >
       <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between gap-3">
         <a
           href="/blog"
@@ -110,6 +114,10 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
         </div>
 
         <PostEngagement client:load slug={post.id} title={post.data.title} url={canonical} />
+
+        <div class="mt-12">
+          <NewsletterForm client:visible variant="card" source={`post:${post.id}`} title="Liked this? Get the next one in your inbox." description="Short notes on tech and product, every week or two." />
+        </div>
 
         <div class="mt-12 p-6 border rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
           <div class="flex items-start gap-4">
