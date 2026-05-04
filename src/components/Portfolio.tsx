@@ -8,66 +8,20 @@ import {
   Github,
   Linkedin,
   GitBranch,
-  Star,
+  FileText,
   Users,
-  Zap,
+  Calendar,
   Activity,
-  TrendingUp,
+  Hash,
   ArrowRight,
 } from 'lucide-react';
 
 import ThemeToggle from './ThemeToggle';
+import SearchPalette from './SearchPalette';
 import MobileNav from './MobileNav';
 import SmoothScroll, { smoothScrollTo } from './SmoothScroll';
 import { useEntranceAnimations } from '../lib/useEntranceAnimations';
-
-interface Project {
-  name: string;
-  description: string;
-  tech: string[];
-  status: 'live' | 'development' | 'archived';
-  impact: string;
-}
-
-const projects: Project[] = [
-  {
-    name: 'nexus-ai',
-    description: 'AI-powered analytics platform for enterprise decision making',
-    tech: ['React', 'Node.js', 'TensorFlow', 'PostgreSQL'],
-    status: 'live',
-    impact: '10k+ users',
-  },
-  {
-    name: 'minimal-cms',
-    description: 'Headless CMS built for developers who value simplicity',
-    tech: ['TypeScript', 'GraphQL', 'Docker', 'Redis'],
-    status: 'development',
-    impact: 'Beta testing',
-  },
-  {
-    name: 'design-system',
-    description: 'Component library used across multiple products',
-    tech: ['React', 'Storybook', 'Tailwind', 'Figma'],
-    status: 'live',
-    impact: '5 teams using',
-  },
-  {
-    name: 'startup-toolkit',
-    description: 'Open-source collection of founder resources and templates',
-    tech: ['Next.js', 'MDX', 'Vercel', 'GitHub'],
-    status: 'archived',
-    impact: '2k+ stars',
-  },
-];
-
-const skills = [
-  { name: 'JavaScript/TypeScript', level: 95, category: 'languages' },
-  { name: 'React/Next.js', level: 92, category: 'frontend' },
-  { name: 'Node.js/Python', level: 88, category: 'backend' },
-  { name: 'System Design', level: 85, category: 'architecture' },
-  { name: 'UI/UX Design', level: 90, category: 'design' },
-  { name: 'Product Strategy', level: 87, category: 'business' },
-];
+import { projects, skills, type Project } from '../config/portfolio';
 
 const skillCategories = ['all', 'languages', 'frontend', 'backend', 'architecture', 'design', 'business'];
 
@@ -79,7 +33,48 @@ const statusColor: Record<Project['status'], string> = {
 
 const fullText = "Hello, I'm MD Salah - developer, designer & engineer";
 
-function Portfolio() {
+interface Stats {
+  postCount: number;
+  publicRepos: number | null;
+  githubFollowers: number | null;
+  yearsCoding: number;
+  buildTime: string;
+}
+
+interface LatestPost {
+  title: string;
+  date: string;
+  excerpt: string;
+  slug: string;
+}
+
+interface PortfolioProps {
+  stats?: Stats;
+  latestPosts?: LatestPost[];
+}
+
+const fallbackPosts: LatestPost[] = [
+  {
+    title: 'Building Scalable Systems: Lessons from the Trenches',
+    date: '2024-01-15',
+    excerpt: 'Key insights on architecture decisions that make or break startups...',
+    slug: 'building-scalable-systems',
+  },
+  {
+    title: 'The Art of Minimal Design in Tech Products',
+    date: '2024-01-08',
+    excerpt: 'Why less is more when it comes to user experience and product design...',
+    slug: 'minimal-design-tech-products',
+  },
+  {
+    title: "From Idea to MVP: A Founder's Journey",
+    date: '2024-01-01',
+    excerpt: 'The complete process of taking a concept from whiteboard to market...',
+    slug: 'idea-to-mvp-journey',
+  },
+];
+
+function Portfolio({ stats, latestPosts }: PortfolioProps) {
   const [currentPath, setCurrentPath] = useState('~');
   const [displayText, setDisplayText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
@@ -167,7 +162,8 @@ function Portfolio() {
             )}
           </nav>
 
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-2">
+            <SearchPalette />
             <ThemeToggle />
             <MobileNav items={navItems} />
           </div>
@@ -264,10 +260,16 @@ function Portfolio() {
           </div>
 
           <div className="space-y-4">
-            {projects.map((project) => (
-              <div
+            {projects.map((project) => {
+              const Wrapper = project.url ? 'a' : 'div';
+              const wrapperProps = project.url
+                ? { href: project.url, target: '_blank', rel: 'noreferrer' }
+                : {};
+              return (
+              <Wrapper
                 key={project.name}
                 data-anim="project"
+                {...wrapperProps}
                 className="flex items-center justify-between p-4 border-l-4 border-l-slate-400 dark:border-l-emerald-500 bg-white/60 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800/50 transition-all duration-300 hover-translate"
               >
                 <div className="flex-1 min-w-0">
@@ -299,8 +301,9 @@ function Portfolio() {
                     </span>
                   </div>
                 </div>
-              </div>
-            ))}
+              </Wrapper>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -363,10 +366,22 @@ function Portfolio() {
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { Icon: Users, label: 'Users Impacted', value: '50k+' },
-              { Icon: Star, label: 'Projects Shipped', value: '15+' },
-              { Icon: Zap, label: 'Uptime', value: '99.9%' },
-              { Icon: TrendingUp, label: 'Years Experience', value: '5' },
+              { Icon: FileText, label: 'Posts Published', value: stats ? String(stats.postCount) : '—' },
+              {
+                Icon: Hash,
+                label: 'Public Repos',
+                value: stats?.publicRepos != null ? String(stats.publicRepos) : '—',
+              },
+              {
+                Icon: Users,
+                label: 'GitHub Followers',
+                value: stats?.githubFollowers != null ? String(stats.githubFollowers) : '—',
+              },
+              {
+                Icon: Calendar,
+                label: 'Years Coding',
+                value: stats ? String(stats.yearsCoding) : '—',
+              },
             ].map(({ Icon, label, value }) => (
               <div
                 key={label}
@@ -385,19 +400,24 @@ function Portfolio() {
           {/* System Monitor Style Display */}
           <div className="mt-12 p-6 border rounded-lg font-mono text-sm border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/30">
             <div className="mb-4 text-slate-700 dark:text-emerald-400">
-              System Status: OPERATIONAL
+              salah@portfolio:~$ uptime
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                { label: 'CPU Usage', value: '85% (Optimal)' },
-                { label: 'Memory', value: '12GB / 16GB' },
-                { label: 'Network', value: '1.2GB/s' },
+                {
+                  label: 'Last build',
+                  value: stats
+                    ? new Date(stats.buildTime).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+                    : '—',
+                },
+                { label: 'Source', value: 'github.com/Salah-XD' },
+                { label: 'Stack', value: 'Astro · React · Tailwind' },
               ].map(({ label, value }) => (
-                <div key={label}>
+                <div key={label} className="min-w-0">
                   <div className="text-slate-600 dark:text-slate-300">{label}</div>
-                  <div className="flex items-center space-x-2">
-                    <Activity className="w-4 h-4 text-slate-600 dark:text-emerald-400" />
-                    <span>{value}</span>
+                  <div className="flex items-center space-x-2 min-w-0">
+                    <Activity className="w-4 h-4 text-slate-600 dark:text-emerald-400 shrink-0" />
+                    <span className="truncate">{value}</span>
                   </div>
                 </div>
               ))}
@@ -425,26 +445,7 @@ function Portfolio() {
           </div>
 
           <div className="space-y-6">
-            {[
-              {
-                title: 'Building Scalable Systems: Lessons from the Trenches',
-                date: '2024-01-15',
-                excerpt: 'Key insights on architecture decisions that make or break startups...',
-                slug: 'building-scalable-systems',
-              },
-              {
-                title: 'The Art of Minimal Design in Tech Products',
-                date: '2024-01-08',
-                excerpt: 'Why less is more when it comes to user experience and product design...',
-                slug: 'minimal-design-tech-products',
-              },
-              {
-                title: "From Idea to MVP: A Founder's Journey",
-                date: '2024-01-01',
-                excerpt: 'The complete process of taking a concept from whiteboard to market...',
-                slug: 'idea-to-mvp-journey',
-              },
-            ].map((post) => (
+            {(latestPosts && latestPosts.length > 0 ? latestPosts : fallbackPosts).map((post) => (
               <a
                 key={post.slug}
                 href={`/blog/${post.slug}`}

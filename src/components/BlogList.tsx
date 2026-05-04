@@ -2,6 +2,7 @@ import { useRef, useState } from 'react';
 import { ArrowLeft, Calendar, Clock, Search, Tag } from 'lucide-react';
 
 import ThemeToggle from './ThemeToggle';
+import SearchPalette from './SearchPalette';
 import SmoothScroll from './SmoothScroll';
 import { useEntranceAnimations } from '../lib/useEntranceAnimations';
 
@@ -55,7 +56,10 @@ function BlogList({ initialPosts }: BlogListProps) {
               <span>cd ..</span>
             </a>
 
-            <ThemeToggle />
+            <div className="flex items-center gap-2">
+              <SearchPalette />
+              <ThemeToggle />
+            </div>
           </div>
 
           <div className="font-mono text-sm mb-4 text-slate-600 dark:text-emerald-400">

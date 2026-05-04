@@ -3,6 +3,11 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
 import { ArrowLeft, Calendar, Clock, Tag } from 'lucide-react';
 import ThemeToggle from '../../components/ThemeToggle';
+import SearchPalette from '../../components/SearchPalette';
+import ReadingProgress from '../../components/ReadingProgress';
+import TableOfContents from '../../components/TableOfContents';
+import PostEngagement from '../../components/PostEngagement';
+import Comments from '../../components/Comments';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -13,12 +18,17 @@ export async function getStaticPaths() {
 }
 
 const { post } = Astro.props;
-const { Content } = await render(post);
+const { Content, headings } = await render(post);
 
 const ogImage = `/og/${post.id}.png`;
-const description =
-  post.data.excerpt ||
-  `${post.data.title} — by ${post.data.author}`;
+const description = post.data.excerpt || `${post.data.title} — by ${post.data.author}`;
+const canonical = new URL(`/blog/${post.id}/`, Astro.site ?? 'https://salahxd.vercel.app').toString();
+
+const giscusRepo = import.meta.env.PUBLIC_GISCUS_REPO;
+const giscusRepoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
+const giscusCategory = import.meta.env.PUBLIC_GISCUS_CATEGORY;
+const giscusCategoryId = import.meta.env.PUBLIC_GISCUS_CATEGORY_ID;
+const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCategoryId;
 ---
 
 <Layout
@@ -30,9 +40,11 @@ const description =
   author={post.data.author}
   tags={post.data.tags}
 >
+  <ReadingProgress client:load />
+
   <div class="min-h-screen transition-colors duration-300">
     <header class="border-b border-slate-200 dark:border-slate-700">
-      <div class="max-w-4xl mx-auto px-4 py-6 flex items-center justify-between gap-3">
+      <div class="max-w-6xl mx-auto px-4 py-6 flex items-center justify-between gap-3">
         <a
           href="/blog"
           class="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
@@ -40,12 +52,15 @@ const description =
           <ArrowLeft className="w-4 h-4" />
           <span>Back to Blog</span>
         </a>
-        <ThemeToggle client:load />
+        <div class="flex items-center gap-2">
+          <SearchPalette client:load />
+          <ThemeToggle client:load />
+        </div>
       </div>
     </header>
 
-    <article class="py-12 px-4">
-      <div class="max-w-4xl mx-auto">
+    <div class="max-w-6xl mx-auto px-4 py-12 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_220px] gap-12">
+      <article class="min-w-0">
         <header class="mb-12">
           <div class="flex flex-wrap items-center gap-x-4 gap-y-2 mb-6">
             <div class="flex items-center space-x-2">
@@ -94,7 +109,9 @@ const description =
           <Content />
         </div>
 
-        <div class="mt-16 p-6 border rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
+        <PostEngagement client:load slug={post.id} title={post.data.title} url={canonical} />
+
+        <div class="mt-12 p-6 border rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50">
           <div class="flex items-start gap-4">
             <div class="w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center font-mono text-lg sm:text-xl bg-slate-800 text-white dark:bg-emerald-500 dark:text-slate-900 shrink-0">
               MS
@@ -123,8 +140,26 @@ const description =
             </div>
           </div>
         </div>
-      </div>
-    </article>
+
+        {giscusReady ? (
+          <Comments
+            client:load
+            repo={giscusRepo}
+            repoId={giscusRepoId}
+            category={giscusCategory}
+            categoryId={giscusCategoryId}
+          />
+        ) : (
+          <section class="mt-16 p-6 border rounded-lg border-dashed border-slate-300 dark:border-slate-700 text-center">
+            <p class="font-mono text-sm text-slate-500 dark:text-slate-400">
+              Comments will appear here once the Giscus environment variables are configured.
+            </p>
+          </section>
+        )}
+      </article>
+
+      <TableOfContents client:load headings={headings} />
+    </div>
   </div>
 
   <script
@@ -138,10 +173,7 @@ const description =
       datePublished: post.data.date,
       author: { '@type': 'Person', name: post.data.author },
       keywords: post.data.tags.join(', '),
-      mainEntityOfPage: {
-        '@type': 'WebPage',
-        '@id': new URL(`/blog/${post.id}`, Astro.site ?? 'https://salahxd.vercel.app').toString(),
-      },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
       image: new URL(ogImage, Astro.site ?? 'https://salahxd.vercel.app').toString(),
     })}
   />

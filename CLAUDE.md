@@ -24,7 +24,7 @@ The blog has **two parallel schemas that must stay in sync**:
 
 When adding or renaming a field, edit **both** files. The Zod schema validates at build; mismatches surface as build failures rather than runtime errors.
 
-Note that `keystatic.config.ts` also accepts `.mdoc` (Markdoc) via `fields.markdoc`, but `content.config.ts` only globs `*.md`. Markdoc files (e.g. `src/content/blog/test.mdoc`) will not be picked up by the Astro collection without adding the pattern and Markdoc integration.
+Both schemas now glob `**/*.{md,mdoc}` and the `@astrojs/markdoc` integration is wired in. The Keystatic markdoc field has its image asset path configured to `public/images/blog/`. If you add new image-bearing posts via Keystatic in production, do a hard refresh on `/keystatic` first so the admin loads the latest config — otherwise images get dumped beside the `.mdoc` and break the build.
 
 ### Routing
 
@@ -35,7 +35,36 @@ Note that `keystatic.config.ts` also accepts `.mdoc` (Markdoc) via `fields.markd
 
 ### React islands
 
-`src/components/Portfolio.tsx` and `src/components/BlogList.tsx` are the only interactive components. Both manage their own dark-mode state locally (no shared theme provider), and the site visually defaults to dark — `Layout.astro` does not yet have an FOUC-prevention script (there is a placeholder comment for one).
+Top-level islands: `src/components/Portfolio.tsx` and `src/components/BlogList.tsx`. The blog post page (`src/pages/blog/[slug].astro`) hydrates several smaller islands: `ReadingProgress`, `TableOfContents`, `PostEngagement`, `Comments`, `SearchPalette`, `ThemeToggle`.
+
+### Theming
+
+Theme is `class="dark"` on `<html>`, set by an inline script in `src/layouts/Layout.astro` (FOUC-free). React state lives in `src/lib/theme.ts` (`useTheme()` hook). Both islands and the post page read the same source of truth, and the toggle persists in `localStorage` and broadcasts across tabs via a `themechange` event + `storage` listener. Components must use Tailwind `dark:` variants — do not reintroduce `isDark ?` ternaries.
+
+### Motion
+
+Lenis + GSAP are wired through `src/components/SmoothScroll.tsx` and `src/lib/gsap.ts`. Each island wraps its content in `<SmoothScroll>` (Lenis is per-island). `useEntranceAnimations` (in `src/lib/useEntranceAnimations.ts`) runs `gsap.context()` over `data-anim="…"` markers. All motion is gated behind `prefers-reduced-motion`. Do **not** combine GSAP ScrollTrigger with Astro's `<ClientRouter>` View Transitions — they conflict.
+
+### API routes + serverless
+
+`src/pages/api/likes/[slug].ts` and `src/pages/api/views/[slug].ts` use `export const prerender = false`. Astro 5 keeps `output: 'static'` and switches just those routes to Vercel Functions automatically — no global config flip. Both endpoints read Upstash Redis via `src/lib/redis.ts` and degrade gracefully (return `configured: false`) when env vars are missing.
+
+### Required environment variables (production)
+
+| Variable | Purpose | Source |
+| -- | -- | -- |
+| `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Likes + view counters via Upstash Redis | Auto-set when you provision Upstash on Vercel Marketplace. `UPSTASH_REDIS_REST_*` aliases also work. |
+| `PUBLIC_GISCUS_REPO`, `PUBLIC_GISCUS_REPO_ID`, `PUBLIC_GISCUS_CATEGORY`, `PUBLIC_GISCUS_CATEGORY_ID` | Giscus comments | Generate via [giscus.app](https://giscus.app) after enabling Discussions on the repo. |
+| `KEYSTATIC_SECRET` | Keystatic admin OAuth | 32+ chars. Already present. |
+
+If any group is missing the dependent feature shows a placeholder card; the rest of the site still builds and runs.
+
+### OG images + RSS + sitemap + search
+
+- `src/pages/og/[slug].png.ts` (per-post) and `src/pages/og-default.png.ts` render terminal-themed OG cards via satori + resvg at build time. Both read TTF files from `public/fonts/` via `process.cwd()` — keep the fonts checked in.
+- `src/pages/rss.xml.ts` produces the RSS feed (submit to daily.dev once the site has a few posts).
+- `@astrojs/sitemap` writes `dist/client/sitemap-index.xml` automatically. Filter excludes `/keystatic` and `/og/`.
+- `astro-pagefind` indexes the site after build (the `[data-pagefind-body]` attribute on the article scopes search to post content). The `SearchPalette` component dynamically imports `/pagefind/pagefind.js` via `new Function('p','return import(p)')` because Vite's static analysis would otherwise fail the build.
 
 ### Styling
 

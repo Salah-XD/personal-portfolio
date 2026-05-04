@@ -4,6 +4,7 @@ import tailwind from '@astrojs/tailwind';
 import keystatic from '@keystatic/astro';
 import markdoc from '@astrojs/markdoc';
 import sitemap from '@astrojs/sitemap';
+import pagefind from 'astro-pagefind';
 import vercel from '@astrojs/vercel';
 
 // https://astro.build/config
@@ -18,6 +19,7 @@ export default defineConfig({
     sitemap({
       filter: (page) => !page.includes('/keystatic') && !page.includes('/og/'),
     }),
+    pagefind(),
     keystatic(),
   ],
   markdown: {

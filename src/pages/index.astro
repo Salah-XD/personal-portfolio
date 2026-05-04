@@ -1,8 +1,46 @@
 ---
+import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Portfolio from '../components/Portfolio';
+
+const posts = await getCollection('blog');
+const postCount = posts.length;
+const latestPosts = posts
+  .slice()
+  .sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf())
+  .slice(0, 3)
+  .map((post) => ({
+    title: post.data.title,
+    date: post.data.date,
+    excerpt: post.data.excerpt || '',
+    slug: post.id,
+  }));
+
+const codingSince = 2019;
+const yearsCoding = new Date().getFullYear() - codingSince;
+
+let publicRepos: number | null = null;
+let githubFollowers: number | null = null;
+try {
+  const res = await fetch('https://api.github.com/users/Salah-XD', {
+    headers: { 'User-Agent': 'salahxd-portfolio-build' },
+  });
+  if (res.ok) {
+    const data = (await res.json()) as { public_repos?: number; followers?: number };
+    publicRepos = typeof data.public_repos === 'number' ? data.public_repos : null;
+    githubFollowers = typeof data.followers === 'number' ? data.followers : null;
+  }
+} catch {
+  /* offline build, fall through */
+}
+
+const buildTime = new Date().toISOString();
 ---
 
-<Layout title="MD Salah - Portfolio">
-  <Portfolio client:load />
+<Layout title="MD Salah - Developer, Designer & Engineer">
+  <Portfolio
+    client:load
+    stats={{ postCount, publicRepos, githubFollowers, yearsCoding, buildTime }}
+    latestPosts={latestPosts}
+  />
 </Layout>
