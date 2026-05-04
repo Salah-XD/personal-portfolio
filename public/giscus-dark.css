@@ -1,0 +1,117 @@
+/* salahxd portfolio — giscus dark theme */
+main {
+  --color-prettylights-syntax-comment: #94a3b8;
+  --color-prettylights-syntax-constant: #34d399;
+  --color-prettylights-syntax-entity: #6ee7b7;
+  --color-prettylights-syntax-storage-modifier-import: #cbd5e1;
+  --color-prettylights-syntax-entity-tag: #34d399;
+  --color-prettylights-syntax-keyword: #34d399;
+  --color-prettylights-syntax-string: #cbd5e1;
+  --color-prettylights-syntax-variable: #f1f5f9;
+  --color-prettylights-syntax-brackethighlighter-unmatched: #f87171;
+  --color-prettylights-syntax-invalid-illegal-text: #f87171;
+  --color-prettylights-syntax-invalid-illegal-bg: #4c1d24;
+  --color-prettylights-syntax-carriage-return-text: #f87171;
+  --color-prettylights-syntax-carriage-return-bg: #4c1d24;
+  --color-prettylights-syntax-string-regexp: #6ee7b7;
+  --color-prettylights-syntax-markup-list: #f1f5f9;
+  --color-prettylights-syntax-markup-heading: #34d399;
+  --color-prettylights-syntax-markup-italic: #f1f5f9;
+  --color-prettylights-syntax-markup-bold: #f1f5f9;
+  --color-prettylights-syntax-markup-deleted-text: #fecaca;
+  --color-prettylights-syntax-markup-deleted-bg: #4c1d24;
+  --color-prettylights-syntax-markup-inserted-text: #6ee7b7;
+  --color-prettylights-syntax-markup-inserted-bg: #064e3b;
+  --color-prettylights-syntax-markup-changed-text: #fde68a;
+  --color-prettylights-syntax-markup-changed-bg: #422006;
+  --color-prettylights-syntax-markup-ignored-text: #cbd5e1;
+  --color-prettylights-syntax-markup-ignored-bg: #1e293b;
+  --color-prettylights-syntax-meta-diff-range: #6ee7b7;
+  --color-prettylights-syntax-brackethighlighter-angle: #94a3b8;
+  --color-prettylights-syntax-sublimelinter-gutter-mark: #475569;
+  --color-prettylights-syntax-constant-other-reference-link: #6ee7b7;
+
+  --color-btn-text: #f1f5f9;
+  --color-btn-bg: #1e293b;
+  --color-btn-border: #334155;
+  --color-btn-shadow: 0 0 #0000;
+  --color-btn-inset-shadow: 0 0 #0000;
+  --color-btn-hover-bg: #334155;
+  --color-btn-hover-border: #475569;
+  --color-btn-active-bg: #1e293b;
+  --color-btn-active-border: #475569;
+  --color-btn-selected-bg: #334155;
+
+  --color-btn-primary-text: #0f172a;
+  --color-btn-primary-bg: #10b981;
+  --color-btn-primary-border: #10b981;
+  --color-btn-primary-shadow: 0 0 #0000;
+  --color-btn-primary-inset-shadow: 0 0 #0000;
+  --color-btn-primary-hover-bg: #34d399;
+  --color-btn-primary-hover-border: #34d399;
+  --color-btn-primary-selected-bg: #059669;
+  --color-btn-primary-selected-shadow: 0 0 #0000;
+  --color-btn-primary-disabled-text: rgba(15, 23, 42, 0.5);
+  --color-btn-primary-disabled-bg: rgba(16, 185, 129, 0.4);
+  --color-btn-primary-disabled-border: rgba(16, 185, 129, 0.4);
+
+  --color-action-list-item-default-hover-bg: #1e293b;
+
+  --color-segmented-control-bg: #0f172a;
+  --color-segmented-control-button-bg: #1e293b;
+  --color-segmented-control-button-selected-border: #334155;
+
+  --color-fg-default: #f1f5f9;
+  --color-fg-muted: #cbd5e1;
+  --color-fg-subtle: #94a3b8;
+  --color-canvas-default: transparent;
+  --color-canvas-overlay: #0f172a;
+  --color-canvas-inset: #0b1220;
+  --color-canvas-subtle: #0f172a;
+  --color-border-default: #334155;
+  --color-border-muted: #1f2937;
+  --color-neutral-muted: rgba(148, 163, 184, 0.16);
+  --color-accent-fg: #34d399;
+  --color-accent-emphasis: #10b981;
+  --color-accent-muted: rgba(16, 185, 129, 0.4);
+  --color-accent-subtle: rgba(16, 185, 129, 0.15);
+  --color-success-fg: #34d399;
+  --color-attention-fg: #fbbf24;
+  --color-attention-muted: rgba(251, 191, 36, 0.4);
+  --color-attention-subtle: rgba(251, 191, 36, 0.15);
+  --color-danger-fg: #f87171;
+  --color-danger-muted: rgba(248, 113, 113, 0.4);
+  --color-danger-subtle: rgba(248, 113, 113, 0.15);
+  --color-primer-shadow-inset: 0 0 #0000;
+  --color-scale-gray-7: #1e293b;
+  --color-scale-blue-8: #064e3b;
+
+  font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+main .pagination-loader-container {
+  background-image: url('https://github.com/images/modules/pulls/progressive-disclosure-line-dark.svg');
+}
+
+main .gsc-loading-image {
+  background-image: url('https://github.githubassets.com/images/mona-loading-dark.gif');
+}
+
+.gsc-comment-box,
+.gsc-comment {
+  border: 1px solid #1f2937;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.6);
+}
+
+.gsc-comment-box-textarea,
+.gsc-reply-box-textarea {
+  background: #0b1220 !important;
+  border-color: #1f2937 !important;
+  font-family: 'JetBrains Mono', ui-monospace, monospace !important;
+}
+
+.gsc-header,
+.gsc-comments > .gsc-header {
+  border-bottom: 1px solid #1f2937;
+}

@@ -9,6 +9,15 @@ interface Props {
   mapping?: 'pathname' | 'url' | 'title' | 'og:title' | 'specific' | 'number';
 }
 
+const SITE_ORIGIN = 'https://salahxd.vercel.app';
+
+function resolveOrigin() {
+  if (typeof window === 'undefined') return SITE_ORIGIN;
+  const { protocol, host } = window.location;
+  if (host.startsWith('localhost') || host.startsWith('127.')) return SITE_ORIGIN;
+  return `${protocol}//${host}`;
+}
+
 export default function Comments({
   repo,
   repoId,
@@ -18,7 +27,7 @@ export default function Comments({
 }: Props) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [theme] = useTheme();
-  const giscusTheme = theme === 'dark' ? 'noborder_dark' : 'noborder_light';
+  const giscusTheme = `${resolveOrigin()}/giscus-${theme}.css`;
 
   useEffect(() => {
     const container = containerRef.current;
