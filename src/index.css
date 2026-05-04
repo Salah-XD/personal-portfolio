@@ -1,3 +1,67 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  html {
+    color-scheme: light dark;
+  }
+  body {
+    font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  }
+}
+
+@layer utilities {
+  /* Hover-only elevations: skip transform on touch devices to avoid sticky hover. */
+  .hover-card {
+    @apply transition-transform;
+  }
+  @media (hover: hover) {
+    .hover-card:hover {
+      @apply scale-[1.02];
+    }
+    .hover-translate:hover {
+      @apply translate-x-1;
+    }
+  }
+
+  /* Honour reduced-motion. */
+  @media (prefers-reduced-motion: reduce) {
+    .hover-card:hover,
+    .hover-translate:hover {
+      transform: none;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+/* Prose tweaks for terminal-flavoured blog posts. */
+.prose pre {
+  @apply rounded-lg border border-slate-700/60;
+}
+
+.prose code:not(pre code) {
+  @apply font-mono text-sm px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-emerald-300 before:content-[''] after:content-[''];
+}
+
+.prose blockquote {
+  @apply border-l-4 border-slate-400 dark:border-emerald-500/60 not-italic font-normal;
+}
+
+.prose h1,
+.prose h2,
+.prose h3,
+.prose h4 {
+  @apply font-mono;
+  scroll-margin-top: 6rem;
+}
+
+.prose a {
+  @apply underline underline-offset-2 decoration-slate-400 dark:decoration-emerald-500/60 hover:decoration-slate-700 dark:hover:decoration-emerald-300 transition-colors;
+}

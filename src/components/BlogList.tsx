@@ -1,5 +1,9 @@
-import React, { useState } from 'react';
+import { useRef, useState } from 'react';
 import { ArrowLeft, Calendar, Clock, Search, Tag } from 'lucide-react';
+
+import ThemeToggle from './ThemeToggle';
+import SmoothScroll from './SmoothScroll';
+import { useEntranceAnimations } from '../lib/useEntranceAnimations';
 
 interface BlogPost {
   id: string;
@@ -19,56 +23,47 @@ interface BlogListProps {
 const categories = ['All', 'Engineering', 'Design', 'Business', 'Development', 'Productivity'];
 
 function BlogList({ initialPosts }: BlogListProps) {
-  const [isDark, setIsDark] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  useEntranceAnimations(rootRef);
 
-  const filteredPosts = initialPosts.filter(post => {
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    
+  const filteredPosts = initialPosts.filter((post) => {
+    const q = searchTerm.toLowerCase();
+    const matchesSearch =
+      !q ||
+      post.title.toLowerCase().includes(q) ||
+      post.excerpt.toLowerCase().includes(q) ||
+      post.tags.some((tag) => tag.toLowerCase().includes(q));
+
     const matchesCategory = selectedCategory === 'All' || post.category === selectedCategory;
-    
     return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className={`min-h-screen transition-colors duration-300 ${
-      isDark 
-        ? 'bg-slate-900 text-slate-100' 
-        : 'bg-slate-50 text-slate-900'
-    }`}>
+    <SmoothScroll>
+    <div ref={rootRef} className="min-h-screen transition-colors duration-300">
       {/* Header */}
-      <header className={`border-b ${
-        isDark ? 'border-slate-700' : 'border-slate-200'
-      }`}>
+      <header className="border-b border-slate-200 dark:border-slate-700">
         <div className="max-w-4xl mx-auto px-4 py-6">
-          <div className="flex items-center justify-between mb-6">
-            <a 
+          <div className="flex items-center justify-between mb-6 gap-3">
+            <a
               href="/"
-              className={`flex items-center space-x-2 font-mono text-sm hover:${isDark ? 'text-emerald-400' : 'text-slate-600'} transition-colors`}
+              className="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
             >
               <ArrowLeft className="w-4 h-4" />
               <span>cd ..</span>
             </a>
-            
-            <button
-              onClick={() => setIsDark(!isDark)}
-              className={`p-2 rounded-lg transition-colors hover:${
-                isDark ? 'bg-slate-800' : 'bg-slate-200'
-              }`}
-            >
-              {isDark ? '☀️' : '🌙'}
-            </button>
+
+            <ThemeToggle />
           </div>
-          
-          <div className={`font-mono text-sm mb-4 ${isDark ? 'text-emerald-400' : 'text-slate-500'}`}>
+
+          <div className="font-mono text-sm mb-4 text-slate-600 dark:text-emerald-400">
             salah@portfolio:~/blog$ ls -la
           </div>
-          
-          <h1 className="font-mono text-3xl md:text-4xl mb-4">Blog</h1>
-          <p className={`font-mono ${isDark ? 'text-slate-300' : 'text-slate-600'}`}>
+
+          <h1 className="font-mono text-2xl sm:text-3xl md:text-4xl mb-4">Blog</h1>
+          <p className="font-mono text-sm sm:text-base text-slate-600 dark:text-slate-300">
             Thoughts on technology, design, and building products
           </p>
         </div>
@@ -77,43 +72,34 @@ function BlogList({ initialPosts }: BlogListProps) {
       {/* Filters */}
       <section className="py-8 px-4">
         <div className="max-w-4xl mx-auto">
-          {/* Search */}
           <div className="relative mb-6">
-            <Search className={`absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 ${
-              isDark ? 'text-slate-400' : 'text-slate-500'
-            }`} />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" />
             <input
               type="text"
               placeholder="Search posts..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className={`w-full pl-10 pr-4 py-3 rounded-lg border font-mono text-sm transition-colors ${
-                isDark 
-                  ? 'bg-slate-800 border-slate-700 text-slate-100 placeholder-slate-400 focus:border-emerald-500' 
-                  : 'bg-white border-slate-200 text-slate-900 placeholder-slate-500 focus:border-slate-400'
-              } focus:outline-none focus:ring-2 focus:ring-emerald-500/20`}
+              className="w-full pl-10 pr-4 py-3 rounded-lg border font-mono text-sm transition-colors bg-white border-slate-200 text-slate-900 placeholder-slate-500 focus:border-slate-400 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-100 dark:placeholder-slate-400 dark:focus:border-emerald-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/20"
             />
           </div>
-          
-          {/* Categories */}
+
           <div className="flex flex-wrap gap-2 mb-8">
-            {categories.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`font-mono text-sm px-4 py-2 rounded-lg transition-colors ${
-                  selectedCategory === category
-                    ? isDark 
-                      ? 'bg-emerald-500 text-slate-900' 
-                      : 'bg-slate-800 text-white'
-                    : isDark 
-                      ? 'bg-slate-800 text-slate-300 hover:bg-slate-700' 
-                      : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
-                }`}
-              >
-                {category}
-              </button>
-            ))}
+            {categories.map((category) => {
+              const active = selectedCategory === category;
+              return (
+                <button
+                  key={category}
+                  onClick={() => setSelectedCategory(category)}
+                  className={`font-mono text-sm px-3 py-2 sm:px-4 rounded-lg transition-colors ${
+                    active
+                      ? 'bg-slate-800 text-white dark:bg-emerald-500 dark:text-slate-900'
+                      : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
+                  }`}
+                >
+                  {category}
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -121,76 +107,67 @@ function BlogList({ initialPosts }: BlogListProps) {
       {/* Blog Posts */}
       <section className="pb-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <div className={`font-mono text-sm mb-6 ${isDark ? 'text-emerald-400' : 'text-slate-500'}`}>
+          <div className="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
             Found {filteredPosts.length} posts
           </div>
-          
-          <div className="space-y-8">
+
+          <div className="space-y-6 sm:space-y-8">
             {filteredPosts.map((post) => (
               <article
                 key={post.id}
-                className={`p-6 border rounded-lg transition-all duration-300 hover:scale-[1.02] ${
-                  isDark 
-                    ? 'border-slate-700 bg-slate-800/50 hover:border-slate-600' 
-                    : 'border-slate-200 bg-white hover:border-slate-300'
-                }`}
+                data-anim="blog-card"
+                className="p-5 sm:p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
               >
-                <div className="flex items-center space-x-4 mb-4">
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                   <div className="flex items-center space-x-2">
-                    <Calendar className={`w-4 h-4 ${isDark ? 'text-emerald-400' : 'text-slate-500'}`} />
-                    <time className={`font-mono text-sm ${isDark ? 'text-emerald-400' : 'text-slate-500'}`}>
+                    <Calendar className="w-4 h-4 text-slate-500 dark:text-emerald-400" />
+                    <time className="font-mono text-sm text-slate-500 dark:text-emerald-400">
                       {post.date}
                     </time>
                   </div>
-                  
-                  <div className="flex items-center space-x-2">
-                    <Clock className={`w-4 h-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`} />
-                    <span className={`font-mono text-sm ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
-                      {post.readTime}
-                    </span>
-                  </div>
-                  
-                  <span className={`font-mono text-xs px-2 py-1 rounded ${
-                    isDark 
-                      ? 'bg-slate-700 text-slate-300' 
-                      : 'bg-slate-100 text-slate-600'
-                  }`}>
+
+                  {post.readTime && (
+                    <div className="flex items-center space-x-2">
+                      <Clock className="w-4 h-4 text-slate-500 dark:text-slate-400" />
+                      <span className="font-mono text-sm text-slate-500 dark:text-slate-400">
+                        {post.readTime}
+                      </span>
+                    </div>
+                  )}
+
+                  <span className="font-mono text-xs px-2 py-1 rounded bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300">
                     {post.category}
                   </span>
                 </div>
-                
-                <a href={`/blog/${post.slug}`}>
-                  <h2 className={`font-mono text-xl md:text-2xl mb-3 hover:${isDark ? 'text-emerald-400' : 'text-slate-600'} transition-colors`}>
+
+                <a href={`/blog/${post.slug}`} className="group">
+                  <h2 className="font-mono text-lg sm:text-xl md:text-2xl mb-3 group-hover:text-slate-700 dark:group-hover:text-emerald-400 transition-colors break-words">
                     {post.title}
                   </h2>
                 </a>
-                
-                <p className={`${isDark ? 'text-slate-300' : 'text-slate-600'} leading-relaxed mb-4`}>
+
+                <p className="text-slate-600 dark:text-slate-300 leading-relaxed mb-4">
                   {post.excerpt}
                 </p>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-2">
-                    <Tag className={`w-4 h-4 ${isDark ? 'text-slate-400' : 'text-slate-500'}`} />
-                    <div className="flex space-x-2">
+
+                <div className="flex items-center justify-between flex-wrap gap-3">
+                  <div className="flex items-center space-x-2 min-w-0">
+                    <Tag className="w-4 h-4 text-slate-500 dark:text-slate-400 shrink-0" />
+                    <div className="flex flex-wrap gap-2">
                       {post.tags.map((tag) => (
                         <span
                           key={tag}
-                          className={`font-mono text-xs px-2 py-1 rounded ${
-                            isDark 
-                              ? 'bg-slate-700 text-slate-300' 
-                              : 'bg-slate-100 text-slate-600'
-                          }`}
+                          className="font-mono text-xs px-2 py-1 rounded bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-300"
                         >
                           {tag}
                         </span>
                       ))}
                     </div>
                   </div>
-                  
+
                   <a
                     href={`/blog/${post.slug}`}
-                    className={`font-mono text-sm hover:${isDark ? 'text-emerald-400' : 'text-slate-600'} transition-colors`}
+                    className="font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
                   >
                     Read more →
                   </a>
@@ -198,10 +175,10 @@ function BlogList({ initialPosts }: BlogListProps) {
               </article>
             ))}
           </div>
-          
+
           {filteredPosts.length === 0 && (
             <div className="text-center py-12">
-              <p className={`font-mono text-lg ${isDark ? 'text-slate-400' : 'text-slate-500'}`}>
+              <p className="font-mono text-base sm:text-lg text-slate-500 dark:text-slate-400">
                 No posts found matching your criteria
               </p>
             </div>
@@ -209,6 +186,7 @@ function BlogList({ initialPosts }: BlogListProps) {
         </div>
       </section>
     </div>
+    </SmoothScroll>
   );
 }
 

@@ -3,9 +3,33 @@ import '../index.css';
 
 interface Props {
   title: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  canonical?: string;
+  publishedTime?: string;
+  author?: string;
+  tags?: string[];
+  noindex?: boolean;
 }
 
-const { title } = Astro.props;
+const {
+  title,
+  description = 'MD Salah — Developer, Designer & Engineer. Building digital experiences that matter.',
+  ogImage,
+  ogType = 'website',
+  canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://salahxd.vercel.app').toString(),
+  publishedTime,
+  author = 'MD Salah',
+  tags = [],
+  noindex = false,
+} = Astro.props;
+
+const siteName = 'MD Salah';
+const twitterHandle = '@Salah_XD';
+const resolvedOgImage = ogImage
+  ? new URL(ogImage, Astro.site ?? 'https://salahxd.vercel.app').toString()
+  : new URL('/og-default.png', Astro.site ?? 'https://salahxd.vercel.app').toString();
 ---
 
 <!DOCTYPE html>
@@ -13,16 +37,86 @@ const { title } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="MD Salah - Developer, Designer & Engineer" />
+    <meta name="description" content={description} />
+    <meta name="author" content={author} />
+    {noindex && <meta name="robots" content="noindex,nofollow" />}
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" type="application/rss+xml" title={`${siteName} blog`} href="/rss.xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={siteName} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    {publishedTime && <meta property="article:published_time" content={publishedTime} />}
+    {ogType === 'article' && <meta property="article:author" content={author} />}
+    {tags.map((t) => <meta property="article:tag" content={t} />)}
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content={twitterHandle} />
+    <meta name="twitter:creator" content={twitterHandle} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={resolvedOgImage} />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+
     <title>{title}</title>
-    <!-- Favicon could go here -->
+
     <script is:inline>
-      // The theme logic is handled in React components for now, 
-      // but if we need a global inline script to prevent flash of unstyled content, it goes here.
-      // Current portfolio defaults to dark.
+      (function () {
+        try {
+          var stored = localStorage.getItem('theme');
+          var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+          var theme = stored === 'light' || stored === 'dark' ? stored : prefersDark ? 'dark' : 'dark';
+          if (theme === 'dark') document.documentElement.classList.add('dark');
+          else document.documentElement.classList.remove('dark');
+        } catch (e) {
+          document.documentElement.classList.add('dark');
+        }
+      })();
     </script>
   </head>
-  <body>
+  <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
     <slot />
+
+    <script>
+      // Inject copy buttons into rendered code blocks (Shiki output uses <pre><code>).
+      const enhancePre = () => {
+        document.querySelectorAll<HTMLPreElement>('pre:not([data-copy-enhanced])').forEach((pre) => {
+          pre.dataset.copyEnhanced = 'true';
+          pre.classList.add('group', 'relative');
+          const btn = document.createElement('button');
+          btn.type = 'button';
+          btn.setAttribute('aria-label', 'Copy code');
+          btn.className =
+            'absolute top-2 right-2 px-2 py-1 text-xs font-mono rounded border border-slate-700 bg-slate-800/80 text-slate-200 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 transition-opacity';
+          btn.textContent = 'copy';
+          btn.addEventListener('click', async () => {
+            const code = pre.querySelector('code')?.innerText ?? pre.innerText;
+            try {
+              await navigator.clipboard.writeText(code);
+              btn.textContent = 'copied';
+              setTimeout(() => (btn.textContent = 'copy'), 1200);
+            } catch {
+              btn.textContent = 'failed';
+              setTimeout(() => (btn.textContent = 'copy'), 1200);
+            }
+          });
+          pre.appendChild(btn);
+        });
+      };
+      enhancePre();
+      document.addEventListener('astro:page-load', enhancePre);
+    </script>
   </body>
 </html>
