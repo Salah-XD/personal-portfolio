@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import Portfolio from '../components/Portfolio';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
 
 const posts = await getCollection('blog');
 const postCount = posts.length;
@@ -19,6 +21,19 @@ const latestPosts = posts
 const codingSince = 2019;
 const yearsCoding = new Date().getFullYear() - codingSince;
 
+// Real per-month publish trend over last 12 months for the Posts sparkline.
+const now = new Date();
+const buckets: number[] = Array(12).fill(0);
+for (const post of posts) {
+  const d = new Date(post.data.date);
+  if (Number.isNaN(d.getTime())) continue;
+  const monthsAgo = (now.getFullYear() - d.getFullYear()) * 12 + (now.getMonth() - d.getMonth());
+  if (monthsAgo >= 0 && monthsAgo < 12) {
+    buckets[11 - monthsAgo] += 1;
+  }
+}
+const postsTrend = buckets;
+
 let publicRepos: number | null = null;
 let githubFollowers: number | null = null;
 try {
@@ -35,12 +50,30 @@ try {
 }
 
 const buildTime = new Date().toISOString();
+declare const __BUILD_COMMIT__: string;
+const commitSha = __BUILD_COMMIT__;
+
+// Pull /now singleton for the home StatusPanel.
+const reader = createReader(process.cwd(), keystaticConfig);
+const nowData = await reader.singletons.now.read();
+const nowLastUpdated = nowData?.lastUpdated ?? new Date().toISOString().slice(0, 10);
+const nowDaysAgo = Math.max(
+  0,
+  Math.floor((Date.now() - new Date(nowLastUpdated).getTime()) / 86_400_000)
+);
+const status = {
+  mood: nowData?.mood ?? '—',
+  focus: nowData?.focus?.[0] ?? '—',
+  learning: nowData?.learning?.[0] ?? '—',
+  daysAgo: nowDaysAgo,
+};
 ---
 
 <Layout title="MD Salah - Developer, Designer & Engineer">
   <Portfolio
     client:load
-    stats={{ postCount, publicRepos, githubFollowers, yearsCoding, buildTime }}
+    stats={{ postCount, publicRepos, githubFollowers, yearsCoding, buildTime, commitSha, postsTrend }}
     latestPosts={latestPosts}
+    status={status}
   />
 </Layout>

@@ -3,6 +3,8 @@ import { createPortal } from 'react-dom';
 import { ArrowRight, Command, FileText, Github, Linkedin, Mail, Search, Sparkles, Sun, Moon, X } from 'lucide-react';
 import { setTheme as setThemeRaw, getTheme } from '../lib/theme';
 import { triggerSecret } from './Konami';
+import { setCrt } from './CrtOverlay';
+import { play } from '../lib/sfx';
 
 interface PagefindResult {
   id: string;
@@ -155,6 +157,26 @@ function buildCommands(close: () => void): PaletteItem[] {
       run: navigate('/rss.xml'),
     },
     {
+      id: 'crt-on',
+      label: 'crt on',
+      hint: 'Enable scanline overlay',
+      Icon: Sparkles,
+      run: () => {
+        setCrt(true);
+        close();
+      },
+    },
+    {
+      id: 'crt-off',
+      label: 'crt off',
+      hint: 'Disable scanline overlay',
+      Icon: Sparkles,
+      run: () => {
+        setCrt(false);
+        close();
+      },
+    },
+    {
       id: 'sudo',
       label: 'sudo',
       hint: 'try it',
@@ -242,6 +264,7 @@ export default function SearchPalette() {
   // Focus + body lock
   useEffect(() => {
     if (open) {
+      play('click');
       requestAnimationFrame(() => inputRef.current?.focus());
       document.body.style.overflow = 'hidden';
     } else {

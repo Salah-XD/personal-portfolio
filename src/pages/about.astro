@@ -3,6 +3,7 @@ import Layout from '../layouts/Layout.astro';
 import { ArrowLeft, Github, Linkedin, Mail, MapPin, Terminal } from 'lucide-react';
 import ThemeToggle from '../components/ThemeToggle';
 import SearchPalette from '../components/SearchPalette';
+import SfxToggle from '../components/SfxToggle';
 import { author } from '../config/portfolio';
 ---
 
@@ -23,6 +24,7 @@ import { author } from '../config/portfolio';
         </a>
         <div class="flex items-center gap-2">
           <SearchPalette client:load />
+          <SfxToggle client:load />
           <ThemeToggle client:load />
         </div>
       </div>

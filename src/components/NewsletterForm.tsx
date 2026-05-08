@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { Mail } from 'lucide-react';
+import { play } from '../lib/sfx';
 
 interface Props {
   source?: string;
@@ -36,6 +37,7 @@ export default function NewsletterForm({
         setStatus('ok');
         setMessage(data.alreadySubscribed ? "You're already subscribed — thanks!" : "Subscribed. Check your inbox for the confirmation.");
         setEmail('');
+        play('ding');
       } else if (data.configured === false) {
         setStatus('error');
         setMessage('Newsletter is not yet configured on the server.');

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { play } from '../lib/sfx';
 
 const STORAGE_KEY = 'salahxd:booted';
 
@@ -32,6 +33,7 @@ export default function BootSequence() {
   useEffect(() => {
     if (!show) return;
     if (count >= lines.length) {
+      play('chord');
       const t = window.setTimeout(() => setShow(false), 350);
       return () => window.clearTimeout(t);
     }

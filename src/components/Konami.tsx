@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { play } from '../lib/sfx';
 
 const SEQUENCE = [
   'ArrowUp',
@@ -39,6 +40,7 @@ export default function Konami() {
     const fire = () => {
       setQuote(quotes[Math.floor(Math.random() * quotes.length)]);
       setShow(true);
+      play('beep');
       window.clearTimeout(timer);
       timer = window.setTimeout(() => setShow(false), 4500);
     };

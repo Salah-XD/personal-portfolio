@@ -3,6 +3,7 @@ import { ArrowLeft, Calendar, Clock, Search, Tag } from 'lucide-react';
 
 import ThemeToggle from './ThemeToggle';
 import SearchPalette from './SearchPalette';
+import SfxToggle from './SfxToggle';
 import SmoothScroll from './SmoothScroll';
 import NewsletterForm from './NewsletterForm';
 import { useEntranceAnimations } from '../lib/useEntranceAnimations';
@@ -62,6 +63,7 @@ function BlogList({ initialPosts }: BlogListProps) {
 
             <div className="flex items-center gap-2">
               <SearchPalette />
+              <SfxToggle />
               <ThemeToggle />
             </div>
           </div>

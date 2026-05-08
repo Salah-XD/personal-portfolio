@@ -1,0 +1,51 @@
+{
+  "sections": [
+    {
+      "heading": "editor",
+      "prompt": "apt list --installed | grep editor",
+      "items": [
+        { "name": "VS Code", "detail": "daily driver, with Vim extension", "url": null },
+        { "name": "Neovim", "detail": "for ssh sessions and quick edits", "url": null },
+        { "name": "JetBrains Mono", "detail": "the only font, dark or light", "url": null }
+      ]
+    },
+    {
+      "heading": "terminal",
+      "prompt": "echo $SHELL",
+      "items": [
+        { "name": "PowerShell + WSL2", "detail": "Ubuntu underneath for everything build-related", "url": null },
+        { "name": "Windows Terminal", "detail": "tabs, panes, JetBrains Mono ligatures", "url": null },
+        { "name": "Starship", "detail": "minimal, fast prompt", "url": null }
+      ]
+    },
+    {
+      "heading": "hardware",
+      "prompt": "sudo dmidecode -t system",
+      "items": [
+        { "name": "Custom desktop", "detail": "where most of the work happens", "url": null },
+        { "name": "Mechanical keyboard", "detail": "tactile switches, ortholinear when possible", "url": null },
+        { "name": "External monitor", "detail": "because vertical space is everything", "url": null }
+      ]
+    },
+    {
+      "heading": "daily software",
+      "prompt": "launchctl list | grep daily",
+      "items": [
+        { "name": "Notion", "detail": "long-form notes and project planning", "url": null },
+        { "name": "Linear", "detail": "when teams are involved", "url": null },
+        { "name": "Figma", "detail": "design + handoff", "url": null },
+        { "name": "Spotify", "detail": "lo-fi for ship mode, jazz for thinking", "url": null }
+      ]
+    },
+    {
+      "heading": "services",
+      "prompt": "curl -s https://infra | jq",
+      "items": [
+        { "name": "Vercel", "detail": "this site, plus most personal projects", "url": "https://vercel.com" },
+        { "name": "Cloudflare", "detail": "DNS + tunnels", "url": null },
+        { "name": "Upstash Redis", "detail": "the likes/views/visits counters here", "url": null },
+        { "name": "Buttondown", "detail": "newsletter — small, indie, fits the brief", "url": null }
+      ]
+    }
+  ]
+}

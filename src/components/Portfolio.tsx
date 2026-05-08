@@ -21,7 +21,17 @@ import SearchPalette from './SearchPalette';
 import MobileNav from './MobileNav';
 import SmoothScroll, { smoothScrollTo } from './SmoothScroll';
 import NewsletterForm from './NewsletterForm';
+import AsciiBanner from './AsciiBanner';
+import AsciiProgressBar from './AsciiProgressBar';
+import Sparkline from './Sparkline';
+import TerminalStatusBar from './TerminalStatusBar';
+import SfxToggle from './SfxToggle';
+import GlitchText from './GlitchText';
+import StatusPanel from './StatusPanel';
 import { useEntranceAnimations } from '../lib/useEntranceAnimations';
+import { applyTilt } from '../lib/tilt';
+import { runUrlCommand } from '../lib/urlCommand';
+import { setCrt } from './CrtOverlay';
 import { projects, skills, type Project } from '../config/portfolio';
 
 const skillCategories = ['all', 'languages', 'frontend', 'backend', 'architecture', 'design', 'business'];
@@ -32,7 +42,15 @@ const statusColor: Record<Project['status'], string> = {
   archived: 'text-slate-500 dark:text-slate-400',
 };
 
-const fullText = "Hello, I'm MD Salah - developer, designer & engineer";
+function timeBasedGreeting(): string {
+  const h = new Date().getHours();
+  if (h >= 5 && h < 12) return 'Good morning';
+  if (h >= 12 && h < 18) return 'Good afternoon';
+  if (h >= 18 && h < 23) return 'Good evening';
+  return 'Burning the midnight oil';
+}
+
+const fullText = `${timeBasedGreeting()} — I'm MD Salah, developer, designer & engineer`;
 
 interface Stats {
   postCount: number;
@@ -40,6 +58,20 @@ interface Stats {
   githubFollowers: number | null;
   yearsCoding: number;
   buildTime: string;
+  commitSha: string;
+  postsTrend: number[];
+}
+
+// Decorative trend seeded from a target value — visual flair, not analytics.
+function decorativeTrend(target: number, points = 12): number[] {
+  if (target <= 0) return Array(points).fill(0);
+  const start = target * 0.6;
+  return Array.from({ length: points }, (_, i) => {
+    const t = i / (points - 1);
+    const base = start + (target - start) * t;
+    const jitter = Math.sin(i * 1.7 + target) * (target * 0.04);
+    return Math.max(0, base + jitter);
+  });
 }
 
 interface LatestPost {
@@ -49,9 +81,17 @@ interface LatestPost {
   slug: string;
 }
 
+interface StatusSnapshot {
+  mood: string;
+  focus: string;
+  learning: string;
+  daysAgo: number;
+}
+
 interface PortfolioProps {
   stats?: Stats;
   latestPosts?: LatestPost[];
+  status?: StatusSnapshot;
 }
 
 const fallbackPosts: LatestPost[] = [
@@ -75,7 +115,7 @@ const fallbackPosts: LatestPost[] = [
   },
 ];
 
-function Portfolio({ stats, latestPosts }: PortfolioProps) {
+function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
   const [currentPath, setCurrentPath] = useState('~');
   const [displayText, setDisplayText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
@@ -107,6 +147,30 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
 
   useEntranceAnimations(rootRef);
 
+  // Apply 3D tilt to project cards (skipped on touch / reduced-motion).
+  useEffect(() => {
+    if (!rootRef.current) return;
+    const cards = rootRef.current.querySelectorAll<HTMLElement>('[data-tilt]');
+    const cleanups = Array.from(cards).map((el) => applyTilt(el));
+    return () => cleanups.forEach((fn) => fn());
+  }, []);
+
+  // ?cmd= URL params
+  useEffect(() => {
+    runUrlCommand({
+      scrollTo: (id) => {
+        const el = document.getElementById(id);
+        if (el) smoothScrollTo(el);
+      },
+      openSearch: () => {
+        const trigger = document.querySelector<HTMLButtonElement>('[aria-label="Open command palette"]');
+        trigger?.click();
+      },
+      openHelp: () => window.dispatchEvent(new CustomEvent('keyboard-help-open')),
+      setCrt,
+    });
+  }, []);
+
   const scrollToSection = (sectionId: string, path: string) => {
     setCurrentPath(path);
     const target = document.getElementById(sectionId);
@@ -125,6 +189,13 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
     { label: './metrics', onClick: () => scrollToSection('metrics', '~/metrics') },
     { label: './blog', href: '/blog' },
     { label: './contact', onClick: () => scrollToSection('contact', '~/contact') },
+  ];
+
+  // Mobile drawer + footer "directory" surface — desktop top nav stays lean.
+  const extraLinks = [
+    { label: './now', href: '/now' },
+    { label: './uses', href: '/uses' },
+    { label: './about (full)', href: '/about' },
   ];
 
   return (
@@ -168,8 +239,9 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
 
           <div className="flex items-center gap-2">
             <SearchPalette />
+            <SfxToggle />
             <ThemeToggle />
-            <MobileNav items={navItems} />
+            <MobileNav items={[...navItems, ...extraLinks]} />
           </div>
         </div>
       </header>
@@ -180,6 +252,8 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
             guest@portfolio:~$ whoami
           </div>
+
+          <AsciiBanner />
 
           <h1 className="font-mono text-2xl md:text-4xl lg:text-5xl mb-8 leading-relaxed break-words">
             {displayText}
@@ -212,7 +286,7 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
       <section id="about" className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~/about$ ls -la
+            <GlitchText>salah@portfolio:~/about$ ls -la</GlitchText>
           </div>
 
           <div className="grid md:grid-cols-2 gap-6 md:gap-12">
@@ -260,7 +334,7 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
       <section id="projects" className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~/projects$ git log --oneline
+            <GlitchText>salah@portfolio:~/projects$ git log --oneline</GlitchText>
           </div>
 
           <div className="space-y-4">
@@ -273,6 +347,7 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
               <Wrapper
                 key={project.name}
                 data-anim="project"
+                data-tilt
                 {...wrapperProps}
                 className="flex items-center justify-between p-4 border-l-4 border-l-slate-400 dark:border-l-emerald-500 bg-white/60 dark:bg-slate-800/30 hover:bg-white dark:hover:bg-slate-800/50 transition-all duration-300 hover-translate"
               >
@@ -316,7 +391,7 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
       <section id="skills" className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~/skills$ top -o cpu
+            <GlitchText>salah@portfolio:~/skills$ top -o cpu</GlitchText>
           </div>
 
           <div className="mb-8">
@@ -339,22 +414,9 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
               })}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-3">
               {filteredSkills.map((skill) => (
-                <div key={skill.name} className="space-y-2" data-anim="skill">
-                  <div className="flex justify-between items-center gap-3">
-                    <span className="font-mono text-sm sm:text-base">{skill.name}</span>
-                    <span className="font-mono text-sm text-slate-600 dark:text-emerald-400 shrink-0">
-                      {skill.level}%
-                    </span>
-                  </div>
-                  <div className="w-full h-2 rounded-full bg-slate-200 dark:bg-slate-800 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-slate-800 dark:bg-emerald-500 transition-[width] duration-1000"
-                      style={{ width: `${skill.level}%` }}
-                    />
-                  </div>
-                </div>
+                <AsciiProgressBar key={skill.name} label={skill.name} value={skill.level} />
               ))}
             </div>
           </div>
@@ -365,40 +427,58 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
       <section id="metrics" className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~/metrics$ iostat -x 1
+            <GlitchText>salah@portfolio:~/metrics$ iostat -x 1</GlitchText>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { Icon: FileText, label: 'Posts Published', value: stats ? String(stats.postCount) : '—' },
+              {
+                Icon: FileText,
+                label: 'Posts Published',
+                value: stats ? String(stats.postCount) : '—',
+                trend: stats?.postsTrend,
+              },
               {
                 Icon: Hash,
                 label: 'Public Repos',
                 value: stats?.publicRepos != null ? String(stats.publicRepos) : '—',
+                trend: stats?.publicRepos != null ? decorativeTrend(stats.publicRepos) : undefined,
               },
               {
                 Icon: Users,
                 label: 'GitHub Followers',
                 value: stats?.githubFollowers != null ? String(stats.githubFollowers) : '—',
+                trend: stats?.githubFollowers != null ? decorativeTrend(stats.githubFollowers) : undefined,
               },
               {
                 Icon: Calendar,
                 label: 'Years Coding',
                 value: stats ? String(stats.yearsCoding) : '—',
+                trend: stats ? decorativeTrend(stats.yearsCoding) : undefined,
               },
-            ].map(({ Icon, label, value }) => (
-              <div
-                key={label}
-                data-anim="metric"
-                className="text-center p-4 sm:p-6 border rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/30"
-              >
-                <Icon className="w-7 h-7 sm:w-8 sm:h-8 mx-auto mb-2 text-slate-600 dark:text-emerald-400" />
-                <div className="font-mono text-xl sm:text-2xl mb-1">{value}</div>
-                <div className="font-mono text-xs sm:text-sm text-slate-600 dark:text-slate-300">
-                  {label}
+            ].map(({ Icon, label, value, trend }) => {
+              const numeric = /^\d+$/.test(value);
+              return (
+                <div
+                  key={label}
+                  data-anim="metric"
+                  className="text-center p-4 sm:p-6 border rounded-lg border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/30"
+                >
+                  <Icon className="w-7 h-7 sm:w-8 sm:h-8 mx-auto mb-2 text-slate-600 dark:text-emerald-400" />
+                  {numeric ? (
+                    <div className="font-mono text-xl sm:text-2xl mb-1 tabular-nums" data-count={value}>0</div>
+                  ) : (
+                    <div className="font-mono text-xl sm:text-2xl mb-1">{value}</div>
+                  )}
+                  {trend && trend.length >= 2 && (
+                    <Sparkline values={trend} className="mx-auto mb-1 opacity-80" />
+                  )}
+                  <div className="font-mono text-xs sm:text-sm text-slate-600 dark:text-slate-300">
+                    {label}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* System Monitor Style Display */}
@@ -430,11 +510,28 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
         </div>
       </section>
 
+      {/* Status Panel — pulls top-line snapshot from /now (Keystatic singleton) */}
+      {status && (
+        <section id="status" className="py-12 px-4">
+          <div className="max-w-4xl mx-auto">
+            <div className="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
+              <GlitchText>salah@portfolio:~$ ./status --short</GlitchText>
+            </div>
+            <StatusPanel
+              mood={status.mood}
+              focus={status.focus}
+              learning={status.learning}
+              daysAgo={status.daysAgo}
+            />
+          </div>
+        </section>
+      )}
+
       {/* Blog Preview Section */}
       <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~/blog$ ls -t | head -3
+            <GlitchText>salah@portfolio:~/blog$ ls -t | head -3</GlitchText>
           </div>
 
           <div className="flex items-center justify-between mb-8 gap-4">
@@ -477,7 +574,7 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
       <section id="contact" className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~/contact$ cat social_links.json
+            <GlitchText>salah@portfolio:~/contact$ cat social_links.json</GlitchText>
           </div>
 
           <div className="text-center">
@@ -518,10 +615,24 @@ function Portfolio({ stats, latestPosts }: PortfolioProps) {
 
       {/* Footer */}
       <footer className="border-t py-8 border-slate-200 dark:border-slate-700">
-        <div className="max-w-4xl mx-auto px-4 text-center">
+        <div className="max-w-4xl mx-auto px-4 text-center space-y-3">
           <p className="font-mono text-xs sm:text-sm text-slate-600 dark:text-emerald-400 break-words">
+            salah@portfolio:~$ ls /
+          </p>
+          <p className="font-mono text-xs sm:text-sm flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
+            <a href="/" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./</a>
+            <a href="/about" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./about</a>
+            <a href="/now" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./now</a>
+            <a href="/uses" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./uses</a>
+            <a href="/blog" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./blog</a>
+            <a href="/rss.xml" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./rss.xml</a>
+          </p>
+          <p className="font-mono text-xs sm:text-sm text-slate-600 dark:text-emerald-400 break-words pt-2">
             salah@portfolio:~$ echo "Built with passion and precision by MD Salah"
           </p>
+          {stats && (
+            <TerminalStatusBar buildTime={stats.buildTime} commitSha={stats.commitSha} />
+          )}
         </div>
       </footer>
     </div>

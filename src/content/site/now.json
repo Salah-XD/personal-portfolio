@@ -1,0 +1,18 @@
+{
+  "lastUpdated": "2026-05-09",
+  "mood": "shipping mode",
+  "focus": [
+    "Finishing the v2 portfolio terminal makeover (you are here).",
+    "Engineering the QSAT platform.",
+    "Writing more — fewer drafts, more publish-ship-iterate."
+  ],
+  "learning": [
+    "Astro 5 islands and view-transition trade-offs.",
+    "GSAP ScrollTrigger composition patterns.",
+    "Where to draw the line between polish and over-polish."
+  ],
+  "notWorkingOn": [
+    "Side projects that don't teach me something.",
+    "Generic SaaS templates."
+  ]
+}

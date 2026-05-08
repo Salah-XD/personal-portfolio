@@ -1,0 +1,120 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { ArrowLeft } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
+import SearchPalette from '../components/SearchPalette';
+import SfxToggle from '../components/SfxToggle';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const data = await reader.singletons.now.read();
+
+// Defensive defaults if the singleton hasn't been edited yet.
+const now = {
+  lastUpdated: data?.lastUpdated ?? new Date().toISOString().slice(0, 10),
+  mood: data?.mood ?? '—',
+  focus: data?.focus ?? [],
+  learning: data?.learning ?? [],
+  notWorkingOn: data?.notWorkingOn ?? [],
+};
+
+const updated = new Date(now.lastUpdated);
+const daysAgo = Math.max(0, Math.floor((Date.now() - updated.getTime()) / 86_400_000));
+const stale = daysAgo > 30;
+---
+
+<Layout
+  title="Now | MD Salah"
+  description="What I'm focused on right now — current projects, learning, and explicit non-goals."
+  ogType="website"
+>
+  <div class="min-h-screen transition-colors duration-300">
+    <header class="border-b border-slate-200 dark:border-slate-700">
+      <div class="max-w-4xl mx-auto px-4 py-6 flex items-center justify-between gap-3">
+        <a href="/" class="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors">
+          <ArrowLeft className="w-4 h-4" />
+          <span>cd ..</span>
+        </a>
+        <div class="flex items-center gap-2">
+          <SearchPalette client:load />
+          <SfxToggle client:load />
+          <ThemeToggle client:load />
+        </div>
+      </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-4 py-12 space-y-10">
+      <section>
+        <div class="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
+          salah@portfolio:~$ cat ~/now.txt
+        </div>
+        <h1 class="font-mono text-3xl sm:text-4xl mb-2 leading-tight">/now</h1>
+        <p class="font-mono text-sm text-slate-600 dark:text-slate-300">
+          mood: <span class="text-emerald-600 dark:text-emerald-400">{now.mood}</span>
+        </p>
+      </section>
+
+      {now.focus.length > 0 && (
+        <section>
+          <div class="font-mono text-sm mb-4 text-slate-600 dark:text-emerald-400"># focus</div>
+          <ul class="space-y-2 font-mono text-sm sm:text-base">
+            {now.focus.map((line) => (
+              <li class="flex gap-3">
+                <span class="text-slate-400 dark:text-slate-500 select-none shrink-0">›</span>
+                <span class="text-slate-700 dark:text-slate-200">{line}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {now.learning.length > 0 && (
+        <section>
+          <div class="font-mono text-sm mb-4 text-slate-600 dark:text-emerald-400"># learning</div>
+          <ul class="space-y-2 font-mono text-sm sm:text-base">
+            {now.learning.map((line) => (
+              <li class="flex gap-3">
+                <span class="text-slate-400 dark:text-slate-500 select-none shrink-0">›</span>
+                <span class="text-slate-700 dark:text-slate-200">{line}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {now.notWorkingOn.length > 0 && (
+        <section>
+          <div class="font-mono text-sm mb-4 text-slate-600 dark:text-emerald-400"># not working on</div>
+          <ul class="space-y-2 font-mono text-sm sm:text-base">
+            {now.notWorkingOn.map((line) => (
+              <li class="flex gap-3">
+                <span class="text-rose-400 dark:text-rose-400 select-none shrink-0">✗</span>
+                <span class="text-slate-700 dark:text-slate-200">{line}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <section class="pt-4 border-t border-slate-200 dark:border-slate-800">
+        <p class={`font-mono text-xs ${stale ? 'text-amber-600 dark:text-amber-400' : 'text-slate-500 dark:text-slate-400'}`}>
+          {stale ? '⚠ ' : '> '}
+          last touched {daysAgo === 0 ? 'today' : `${daysAgo} day${daysAgo === 1 ? '' : 's'} ago`}
+          {stale && ' — stale, time to refresh'}
+        </p>
+        <p class="mt-2 font-mono text-xs text-slate-400 dark:text-slate-500">
+          inspired by <a class="underline underline-offset-2" href="https://nownownow.com/about" target="_blank" rel="noreferrer">nownownow.com</a> · edit this via <a class="underline underline-offset-2" href="/keystatic">/keystatic</a>
+        </p>
+      </section>
+    </main>
+
+    <footer class="border-t border-slate-200 dark:border-slate-700 py-8 mt-12">
+      <div class="max-w-4xl mx-auto px-4">
+        <p class="font-mono text-xs sm:text-sm text-slate-500 dark:text-emerald-400 break-words">
+          salah@portfolio:~$ exit
+        </p>
+      </div>
+    </footer>
+  </div>
+</Layout>
