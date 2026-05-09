@@ -18,6 +18,7 @@ export default function NewsletterForm({
   description = 'Tech, design, and building products. No spam, unsubscribe anytime.',
 }: Props) {
   const [email, setEmail] = useState('');
+  const [website, setWebsite] = useState('');
   const [status, setStatus] = useState<Status>('idle');
   const [message, setMessage] = useState('');
 
@@ -30,12 +31,12 @@ export default function NewsletterForm({
       const res = await fetch('/api/subscribe', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: email.trim(), source }),
+        body: JSON.stringify({ email: email.trim(), source, website }),
       });
       const data = (await res.json()) as { ok?: boolean; error?: string; configured?: boolean; alreadySubscribed?: boolean };
       if (data.ok) {
         setStatus('ok');
-        setMessage(data.alreadySubscribed ? "You're already subscribed — thanks!" : "Subscribed. Check your inbox for the confirmation.");
+        setMessage(data.alreadySubscribed ? "You're already subscribed — thanks!" : "You're in. Talk soon.");
         setEmail('');
         play('ding');
       } else if (data.configured === false) {
@@ -70,6 +71,19 @@ export default function NewsletterForm({
 
       <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2">
         <label className="sr-only" htmlFor={`newsletter-email-${source}`}>Email</label>
+        {/* Honeypot — hidden from humans (and screen readers via aria-hidden), bots fill it and get silently dropped server-side. */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', top: 'auto', width: '1px', height: '1px', overflow: 'hidden' }}>
+          <label htmlFor={`newsletter-website-${source}`}>Website (leave empty)</label>
+          <input
+            id={`newsletter-website-${source}`}
+            type="text"
+            name="website"
+            tabIndex={-1}
+            autoComplete="off"
+            value={website}
+            onChange={(e) => setWebsite(e.target.value)}
+          />
+        </div>
         <div className="relative flex-1">
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400 pointer-events-none" />
           <input

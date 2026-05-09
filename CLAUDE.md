@@ -55,6 +55,7 @@ Lenis + GSAP are wired through `src/components/SmoothScroll.tsx` and `src/lib/gs
 | -- | -- | -- |
 | `KV_REST_API_URL`, `KV_REST_API_TOKEN` | Likes + view counters via Upstash Redis | Auto-set when you provision Upstash on Vercel Marketplace. `UPSTASH_REDIS_REST_*` aliases also work. |
 | `PUBLIC_GISCUS_REPO`, `PUBLIC_GISCUS_REPO_ID`, `PUBLIC_GISCUS_CATEGORY`, `PUBLIC_GISCUS_CATEGORY_ID` | Giscus comments | Generate via [giscus.app](https://giscus.app) after enabling Discussions on the repo. |
+| `BUTTONDOWN_API_KEY` | Newsletter signup form (`src/pages/api/subscribe.ts` → Buttondown) | [buttondown.com](https://buttondown.com) → Settings → API & Integrations. Without it, `/api/subscribe` returns 503 and the form shows a "not configured" message. |
 | `KEYSTATIC_SECRET` | Keystatic admin OAuth | 32+ chars. Already present. |
 
 If any group is missing the dependent feature shows a placeholder card; the rest of the site still builds and runs.
@@ -62,7 +63,7 @@ If any group is missing the dependent feature shows a placeholder card; the rest
 ### OG images + RSS + sitemap + search
 
 - `src/pages/og/[slug].png.ts` (per-post) and `src/pages/og-default.png.ts` render terminal-themed OG cards via satori + resvg at build time. Both read TTF files from `public/fonts/` via `process.cwd()` — keep the fonts checked in.
-- `src/pages/rss.xml.ts` produces the RSS feed (submit to daily.dev once the site has a few posts).
+- `src/pages/rss.xml.ts` produces the RSS feed (submit to daily.dev once the site has a few posts). The newsletter signup (`NewsletterForm.tsx` → `/api/subscribe`) is a separate channel; pair them by enabling Buttondown's RSS-to-email so each new post auto-broadcasts.
 - `@astrojs/sitemap` writes `dist/client/sitemap-index.xml` automatically. Filter excludes `/keystatic` and `/og/`.
 - `astro-pagefind` indexes the site after build (the `[data-pagefind-body]` attribute on the article scopes search to post content). The `SearchPalette` component dynamically imports `/pagefind/pagefind.js` via `new Function('p','return import(p)')` because Vite's static analysis would otherwise fail the build.
 
