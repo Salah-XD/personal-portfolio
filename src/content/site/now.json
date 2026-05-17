@@ -1,15 +1,15 @@
 {
-  "lastUpdated": "2026-05-09",
-  "mood": "shipping mode",
+  "lastUpdated": "2026-05-17",
+  "mood": "Building mode",
   "focus": [
-    "Finishing the v2 portfolio terminal makeover (you are here).",
-    "Engineering the QSAT platform.",
-    "Writing more — fewer drafts, more publish-ship-iterate."
+    "working on the early beta version of DOCKSHIFT",
+    "managing releases and actively testing in the software",
+    "Writing more , fewer drafts, more publish-ship-iterate."
   ],
   "learning": [
-    "Astro 5 islands and view-transition trade-offs.",
-    "GSAP ScrollTrigger composition patterns.",
-    "Where to draw the line between polish and over-polish."
+    "learning svelte framework and sveltekit",
+    "discovered Sv-animations and working on it",
+    "learning  EKS in aws"
   ],
   "notWorkingOn": [
     "Side projects that don't teach me something.",
