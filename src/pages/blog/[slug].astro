@@ -9,6 +9,7 @@ import TableOfContents from '../../components/TableOfContents';
 import PostEngagement from '../../components/PostEngagement';
 import Comments from '../../components/Comments';
 import NewsletterForm from '../../components/NewsletterForm';
+import ProductCTA from '../../components/ProductCTA.astro';
 
 export async function getStaticPaths() {
   const posts = await getCollection('blog');
@@ -23,7 +24,7 @@ const { Content, headings } = await render(post);
 
 const ogImage = `/og/${post.id}.png`;
 const description = post.data.excerpt || `${post.data.title} — by ${post.data.author}`;
-const canonical = new URL(`/blog/${post.id}/`, Astro.site ?? 'https://salahxd.vercel.app').toString();
+const canonical = new URL(`/blog/${post.id}/`, Astro.site ?? 'https://salahxd.dev').toString();
 
 const giscusRepo = import.meta.env.PUBLIC_GISCUS_REPO;
 const giscusRepoId = import.meta.env.PUBLIC_GISCUS_REPO_ID;
@@ -115,6 +116,8 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
 
         <PostEngagement client:load slug={post.id} title={post.data.title} url={canonical} />
 
+        <ProductCTA />
+
         <div class="mt-12">
           <NewsletterForm client:visible variant="card" source={`post:${post.id}`} title="Liked this? Get the next one in your inbox." description="Short notes on tech and product, every week or two." />
         </div>
@@ -182,7 +185,7 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
       author: { '@type': 'Person', name: post.data.author },
       keywords: post.data.tags.join(', '),
       mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
-      image: new URL(ogImage, Astro.site ?? 'https://salahxd.vercel.app').toString(),
+      image: new URL(ogImage, Astro.site ?? 'https://salahxd.dev').toString(),
     })}
   />
 </Layout>

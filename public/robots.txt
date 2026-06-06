@@ -3,4 +3,4 @@ Allow: /
 Disallow: /keystatic
 Disallow: /api/
 
-Sitemap: https://salahxd.vercel.app/sitemap-index.xml
+Sitemap: https://salahxd.dev/sitemap-index.xml

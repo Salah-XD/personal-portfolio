@@ -1,0 +1,2 @@
+# Keeps the blog content directory tracked in git while empty.
+# Add real posts as `*.md` / `*.mdoc` here (or via the /keystatic admin UI).

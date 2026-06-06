@@ -9,7 +9,7 @@ interface Props {
   mapping?: 'pathname' | 'url' | 'title' | 'og:title' | 'specific' | 'number';
 }
 
-const SITE_ORIGIN = 'https://salahxd.vercel.app';
+const SITE_ORIGIN = 'https://salahxd.dev';
 
 function resolveOrigin() {
   if (typeof window === 'undefined') return SITE_ORIGIN;

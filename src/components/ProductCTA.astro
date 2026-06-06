@@ -1,0 +1,44 @@
+---
+// Product call-to-action — funnels blog readers toward the product you're
+// promoting. Pulls from `author.currentlyBuilding` in src/config/portfolio.ts,
+// so editing that one config object updates every CTA across the site.
+// Renders nothing if no product URL is configured.
+import { ArrowRight } from 'lucide-react';
+import { author } from '../config/portfolio';
+
+interface Props {
+  /** Override the configured product (e.g. promote a different one per post). */
+  name?: string;
+  description?: string;
+  url?: string;
+}
+
+const product = {
+  name: Astro.props.name ?? author.currentlyBuilding.name,
+  description: Astro.props.description ?? author.currentlyBuilding.description,
+  url: Astro.props.url ?? author.currentlyBuilding.url,
+};
+---
+
+{product.url && (
+  <aside class="mt-12 p-6 border rounded-lg border-slate-200 dark:border-emerald-500/40 bg-slate-50 dark:bg-emerald-500/5">
+    <div class="font-mono text-xs mb-3 text-slate-500 dark:text-emerald-400">
+      salah@portfolio:~$ ./promote --product
+    </div>
+    <h3 class="font-mono text-lg sm:text-xl mb-2">
+      Building <span class="text-slate-900 dark:text-emerald-400">{product.name}</span>
+    </h3>
+    <p class="text-slate-600 dark:text-slate-300 mb-5 max-w-prose">
+      {product.description}
+    </p>
+    <a
+      href={product.url}
+      target="_blank"
+      rel="noreferrer"
+      class="inline-flex items-center gap-2 font-mono text-sm px-4 py-2 rounded bg-slate-800 text-white dark:bg-emerald-500 dark:text-slate-900 hover:opacity-90 transition-opacity"
+    >
+      <span>Check out {product.name}</span>
+      <ArrowRight className="w-4 h-4" />
+    </a>
+  </aside>
+)}

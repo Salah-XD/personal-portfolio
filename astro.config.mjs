@@ -19,7 +19,7 @@ const buildCommit = (() => {
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://salahxd.vercel.app',
+  site: 'https://salahxd.dev',
   output: 'static',
   adapter: vercel(),
   integrations: [

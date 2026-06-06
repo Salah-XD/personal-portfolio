@@ -94,27 +94,6 @@ interface PortfolioProps {
   status?: StatusSnapshot;
 }
 
-const fallbackPosts: LatestPost[] = [
-  {
-    title: 'Building Scalable Systems: Lessons from the Trenches',
-    date: '2024-01-15',
-    excerpt: 'Key insights on architecture decisions that make or break startups...',
-    slug: 'building-scalable-systems',
-  },
-  {
-    title: 'The Art of Minimal Design in Tech Products',
-    date: '2024-01-08',
-    excerpt: 'Why less is more when it comes to user experience and product design...',
-    slug: 'minimal-design-tech-products',
-  },
-  {
-    title: "From Idea to MVP: A Founder's Journey",
-    date: '2024-01-01',
-    excerpt: 'The complete process of taking a concept from whiteboard to market...',
-    slug: 'idea-to-mvp-journey',
-  },
-];
-
 function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
   const [currentPath, setCurrentPath] = useState('~');
   const [displayText, setDisplayText] = useState('');
@@ -546,26 +525,40 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
           </div>
 
           <div className="space-y-6">
-            {(latestPosts && latestPosts.length > 0 ? latestPosts : fallbackPosts).map((post) => (
-              <a
-                key={post.slug}
-                href={`/blog/${post.slug}`}
+            {latestPosts && latestPosts.length > 0 ? (
+              latestPosts.map((post) => (
+                <a
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  data-anim="blog-card"
+                  className="block p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
+                >
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <time className="font-mono text-sm text-slate-600 dark:text-emerald-400">
+                      {post.date}
+                    </time>
+                  </div>
+                  <h3 className="font-mono text-lg sm:text-xl mb-3 transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </a>
+              ))
+            ) : (
+              <div
                 data-anim="blog-card"
-                className="block p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
+                className="p-6 border border-dashed rounded-lg border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-800/30"
               >
-                <div className="flex items-center justify-between mb-3 sm:mb-4">
-                  <time className="font-mono text-sm text-slate-600 dark:text-emerald-400">
-                    {post.date}
-                  </time>
-                </div>
-                <h3 className="font-mono text-lg sm:text-xl mb-3 transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                  {post.excerpt}
+                <p className="font-mono text-sm text-slate-600 dark:text-emerald-400 mb-2">
+                  salah@portfolio:~/blog$ ls -t
                 </p>
-              </a>
-            ))}
+                <p className="font-mono text-sm text-slate-500 dark:text-slate-400">
+                  No posts yet — first one is in the pipeline. Subscribe below to get it the moment it drops.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>

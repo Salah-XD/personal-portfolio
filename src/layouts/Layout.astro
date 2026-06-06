@@ -25,7 +25,7 @@ const {
   description = 'MD Salah — Developer, Designer & Engineer. Building digital experiences that matter.',
   ogImage,
   ogType = 'website',
-  canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://salahxd.vercel.app').toString(),
+  canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://salahxd.dev').toString(),
   publishedTime,
   author = 'MD Salah',
   tags = [],
@@ -35,8 +35,8 @@ const {
 const siteName = 'MD Salah';
 const twitterHandle = '@Salah_XD';
 const resolvedOgImage = ogImage
-  ? new URL(ogImage, Astro.site ?? 'https://salahxd.vercel.app').toString()
-  : new URL('/og-default.png', Astro.site ?? 'https://salahxd.vercel.app').toString();
+  ? new URL(ogImage, Astro.site ?? 'https://salahxd.dev').toString()
+  : new URL('/og-default.png', Astro.site ?? 'https://salahxd.dev').toString();
 
 const sourceComment = [
   '<!--',
