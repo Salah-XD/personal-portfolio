@@ -110,6 +110,21 @@
   @apply rounded-lg border border-slate-700/60;
 }
 
+/* Shiki dual-theme support. The themes are set in astro.config.mjs
+   ({ light: 'github-light', dark: 'github-dark-default' }); Shiki renders the
+   light palette as inline colours and parks the dark palette in --shiki-dark*
+   custom properties. Since theming here is class-based (html.dark), this rule
+   is what actually swaps code blocks to the dark palette — without it, code
+   stays light while the rest of the page flips. */
+html.dark .astro-code,
+html.dark .astro-code span {
+  color: var(--shiki-dark) !important;
+  background-color: var(--shiki-dark-bg) !important;
+  font-style: var(--shiki-dark-font-style) !important;
+  font-weight: var(--shiki-dark-font-weight) !important;
+  text-decoration: var(--shiki-dark-text-decoration) !important;
+}
+
 .prose code:not(pre code) {
   @apply font-mono text-sm px-1.5 py-0.5 rounded bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-emerald-300 before:content-[''] after:content-[''];
 }
