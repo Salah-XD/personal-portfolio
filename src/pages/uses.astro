@@ -52,7 +52,7 @@ const sections = data?.sections ?? [];
           <ul class="space-y-2 font-mono text-sm sm:text-base">
             {section.items.map((item) => (
               <li class="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                <span class="text-slate-400 dark:text-slate-500 select-none shrink-0">›</span>
+                <span class="text-slate-500 dark:text-slate-400 select-none shrink-0">›</span>
                 {item.url ? (
                   <a href={item.url} target="_blank" rel="noreferrer" class="text-slate-700 dark:text-slate-200 underline underline-offset-2 decoration-slate-300 dark:decoration-emerald-500/50 hover:decoration-slate-700 dark:hover:decoration-emerald-300">
                     {item.name}
@@ -70,7 +70,7 @@ const sections = data?.sections ?? [];
       ))}
 
       <section class="pt-4 border-t border-slate-200 dark:border-slate-800">
-        <p class="font-mono text-xs text-slate-400 dark:text-slate-500">
+        <p class="font-mono text-xs text-slate-600 dark:text-slate-400">
           inspired by <a class="underline underline-offset-2" href="https://uses.tech" target="_blank" rel="noreferrer">uses.tech</a> · edit via <a class="underline underline-offset-2" href="/keystatic">/keystatic</a>
         </p>
       </section>

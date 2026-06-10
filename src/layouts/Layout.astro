@@ -122,7 +122,7 @@ const sourceComment = [
     <script>
       // Inject copy buttons into rendered code blocks (Shiki output uses <pre><code>).
       const enhancePre = () => {
-        document.querySelectorAll<HTMLPreElement>('pre:not([data-copy-enhanced])').forEach((pre) => {
+        document.querySelectorAll<HTMLPreElement>('article pre:not([data-copy-enhanced])').forEach((pre) => {
           pre.dataset.copyEnhanced = 'true';
           pre.classList.add('group', 'relative');
           const btn = document.createElement('button');

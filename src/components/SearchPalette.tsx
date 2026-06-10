@@ -376,7 +376,7 @@ export default function SearchPalette() {
         type="button"
         onClick={() => setOpen(true)}
         aria-label="Open command palette"
-        className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-emerald-400 hover:border-slate-300 dark:hover:border-slate-600 transition-colors font-mono text-xs"
+        className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 text-slate-600 dark:text-slate-400 hover:text-slate-700 dark:hover:text-emerald-400 hover:border-slate-300 dark:hover:border-slate-600 transition-colors font-mono text-xs"
       >
         <Search className="w-4 h-4" />
         <span>Search</span>
@@ -434,7 +434,7 @@ export default function SearchPalette() {
             >
               {filteredCommands.length > 0 && (
                 <div>
-                  <div className="px-4 pt-3 pb-1 font-mono text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                  <div className="px-4 pt-3 pb-1 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     commands
                   </div>
                   {filteredCommands.map((c, i) => {
@@ -456,7 +456,7 @@ export default function SearchPalette() {
                         <Icon className="w-4 h-4 text-slate-500 dark:text-emerald-400 shrink-0" />
                         <span className="text-slate-900 dark:text-slate-100">{c.label}</span>
                         {c.hint && (
-                          <span className="ml-auto text-xs text-slate-400 dark:text-slate-500 truncate">
+                          <span className="ml-auto text-xs text-slate-500 dark:text-slate-400 truncate">
                             {c.hint}
                           </span>
                         )}
@@ -468,7 +468,7 @@ export default function SearchPalette() {
 
               {trimmed && (
                 <div>
-                  <div className="px-4 pt-3 pb-1 font-mono text-[10px] uppercase tracking-wider text-slate-400 dark:text-slate-500">
+                  <div className="px-4 pt-3 pb-1 font-mono text-[10px] uppercase tracking-wider text-slate-500 dark:text-slate-400">
                     posts {searching ? '· searching…' : ''}
                   </div>
                   {searchResults.length === 0 && !searching && (
@@ -505,7 +505,7 @@ export default function SearchPalette() {
               )}
 
               {!trimmed && (
-                <div className="px-4 py-3 font-mono text-[11px] text-slate-400 dark:text-slate-500 border-t border-slate-100 dark:border-slate-800 space-y-1">
+                <div className="px-4 py-3 font-mono text-[11px] text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 space-y-1">
                   <div>↑↓ navigate · ↵ run · esc close</div>
                   <div className="opacity-70">tip: try <code className="px-1 py-0.5 rounded bg-slate-100 dark:bg-slate-800">sudo</code> · or the konami code (↑↑↓↓←→←→ba)</div>
                 </div>

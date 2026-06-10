@@ -110,7 +110,7 @@ export default function NewsletterForm({
       {message && (
         <p
           className={`mt-3 font-mono text-xs ${
-            status === 'ok' ? 'text-emerald-600 dark:text-emerald-400' : 'text-rose-500 dark:text-rose-400'
+            status === 'ok' ? 'text-emerald-700 dark:text-emerald-400' : 'text-rose-600 dark:text-rose-400'
           }`}
         >
           {message}

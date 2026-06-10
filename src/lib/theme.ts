@@ -24,7 +24,10 @@ export function toggleTheme() {
 }
 
 export function useTheme(): [Theme, (t: Theme) => void, () => void] {
-  const [theme, setLocal] = useState<Theme>(() => getTheme());
+  // Start from 'dark' (what SSR always renders) so the first client render
+  // matches the server — otherwise light-mode visitors hit a hydration
+  // mismatch. The effect reconciles with the real DOM theme right after mount.
+  const [theme, setLocal] = useState<Theme>('dark');
 
   useEffect(() => {
     setLocal(getTheme());

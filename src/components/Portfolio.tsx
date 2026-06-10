@@ -37,8 +37,8 @@ import { projects, skills, type Project } from '../config/portfolio';
 const skillCategories = ['all', 'languages', 'frontend', 'backend', 'architecture', 'design', 'business'];
 
 const statusColor: Record<Project['status'], string> = {
-  live: 'text-emerald-600 dark:text-emerald-400',
-  development: 'text-amber-600 dark:text-amber-400',
+  live: 'text-emerald-700 dark:text-emerald-400',
+  development: 'text-amber-700 dark:text-amber-400',
   archived: 'text-slate-500 dark:text-slate-400',
 };
 
@@ -72,6 +72,15 @@ function decorativeTrend(target: number, points = 12): number[] {
     const jitter = Math.sin(i * 1.7 + target) * (target * 0.04);
     return Math.max(0, base + jitter);
   });
+}
+
+// Format a build timestamp deterministically in UTC. Using a fixed format
+// (rather than toLocaleString) keeps server and client output identical, so
+// React doesn't hit a hydration mismatch on locale/timezone differences.
+function formatBuildStamp(iso: string): string {
+  const d = new Date(iso);
+  const pad = (n: number) => String(n).padStart(2, '0');
+  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
 }
 
 interface LatestPost {
@@ -225,6 +234,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
         </div>
       </header>
 
+      <main>
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-4xl mx-auto" data-anim="hero">
@@ -262,8 +272,9 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
       </section>
 
       {/* About Section */}
-      <section id="about" className="py-20 px-4">
+      <section id="about" className="py-20 px-4" aria-labelledby="about-heading">
         <div className="max-w-4xl mx-auto">
+          <h2 id="about-heading" className="sr-only">About</h2>
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
             <GlitchText>salah@portfolio:~/about$ ls -la</GlitchText>
           </div>
@@ -310,8 +321,9 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
       </section>
 
       {/* Projects Section */}
-      <section id="projects" className="py-20 px-4">
+      <section id="projects" className="py-20 px-4" aria-labelledby="projects-heading">
         <div className="max-w-4xl mx-auto">
+          <h2 id="projects-heading" className="sr-only">Projects</h2>
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
             <GlitchText>salah@portfolio:~/projects$ git log --oneline</GlitchText>
           </div>
@@ -367,8 +379,9 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
       </section>
 
       {/* Skills Section */}
-      <section id="skills" className="py-20 px-4">
+      <section id="skills" className="py-20 px-4" aria-labelledby="skills-heading">
         <div className="max-w-4xl mx-auto">
+          <h2 id="skills-heading" className="sr-only">Skills</h2>
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
             <GlitchText>salah@portfolio:~/skills$ top -o cpu</GlitchText>
           </div>
@@ -403,8 +416,9 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
       </section>
 
       {/* Metrics Section */}
-      <section id="metrics" className="py-20 px-4">
+      <section id="metrics" className="py-20 px-4" aria-labelledby="metrics-heading">
         <div className="max-w-4xl mx-auto">
+          <h2 id="metrics-heading" className="sr-only">By the numbers</h2>
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
             <GlitchText>salah@portfolio:~/metrics$ iostat -x 1</GlitchText>
           </div>
@@ -445,7 +459,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
                 >
                   <Icon className="w-7 h-7 sm:w-8 sm:h-8 mx-auto mb-2 text-slate-600 dark:text-emerald-400" />
                   {numeric ? (
-                    <div className="font-mono text-xl sm:text-2xl mb-1 tabular-nums" data-count={value}>0</div>
+                    <div className="font-mono text-xl sm:text-2xl mb-1 tabular-nums" data-count={value}>{value}</div>
                   ) : (
                     <div className="font-mono text-xl sm:text-2xl mb-1">{value}</div>
                   )}
@@ -469,9 +483,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
               {[
                 {
                   label: 'Last build',
-                  value: stats
-                    ? new Date(stats.buildTime).toLocaleString(undefined, { dateStyle: 'medium', timeStyle: 'short' })
-                    : '—',
+                  value: stats ? formatBuildStamp(stats.buildTime) : '—',
                 },
                 { label: 'Source', value: 'github.com/Salah-XD' },
                 { label: 'Stack', value: 'Astro · React · Tailwind' },
@@ -605,6 +617,8 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
           <NewsletterForm variant="card" source="home" />
         </div>
       </section>
+
+      </main>
 
       {/* Footer */}
       <footer className="border-t py-8 border-slate-200 dark:border-slate-700">

@@ -79,6 +79,7 @@ function BlogList({ initialPosts }: BlogListProps) {
         </div>
       </header>
 
+      <main>
       {/* Filters */}
       <section className="py-8 px-4">
         <div className="max-w-4xl mx-auto">
@@ -118,7 +119,7 @@ function BlogList({ initialPosts }: BlogListProps) {
       <section className="pb-20 px-4">
         <div className="max-w-4xl mx-auto">
           <div className="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
-            Found {filteredPosts.length} posts
+            Found {filteredPosts.length} {filteredPosts.length === 1 ? 'post' : 'posts'}
           </div>
 
           <div className="space-y-6 sm:space-y-8">
@@ -199,6 +200,7 @@ function BlogList({ initialPosts }: BlogListProps) {
           </div>
         </div>
       </section>
+    </main>
     </div>
     </SmoothScroll>
   );

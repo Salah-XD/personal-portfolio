@@ -51,7 +51,7 @@ const stale = daysAgo > 30;
         </div>
         <h1 class="font-mono text-3xl sm:text-4xl mb-2 leading-tight">/now</h1>
         <p class="font-mono text-sm text-slate-600 dark:text-slate-300">
-          mood: <span class="text-emerald-600 dark:text-emerald-400">{now.mood}</span>
+          mood: <span class="text-emerald-700 dark:text-emerald-400">{now.mood}</span>
         </p>
       </section>
 
@@ -61,7 +61,7 @@ const stale = daysAgo > 30;
           <ul class="space-y-2 font-mono text-sm sm:text-base">
             {now.focus.map((line) => (
               <li class="flex gap-3">
-                <span class="text-slate-400 dark:text-slate-500 select-none shrink-0">›</span>
+                <span class="text-slate-500 dark:text-slate-400 select-none shrink-0">›</span>
                 <span class="text-slate-700 dark:text-slate-200">{line}</span>
               </li>
             ))}
@@ -75,7 +75,7 @@ const stale = daysAgo > 30;
           <ul class="space-y-2 font-mono text-sm sm:text-base">
             {now.learning.map((line) => (
               <li class="flex gap-3">
-                <span class="text-slate-400 dark:text-slate-500 select-none shrink-0">›</span>
+                <span class="text-slate-500 dark:text-slate-400 select-none shrink-0">›</span>
                 <span class="text-slate-700 dark:text-slate-200">{line}</span>
               </li>
             ))}
@@ -103,7 +103,7 @@ const stale = daysAgo > 30;
           last touched {daysAgo === 0 ? 'today' : `${daysAgo} day${daysAgo === 1 ? '' : 's'} ago`}
           {stale && ' — stale, time to refresh'}
         </p>
-        <p class="mt-2 font-mono text-xs text-slate-400 dark:text-slate-500">
+        <p class="mt-2 font-mono text-xs text-slate-600 dark:text-slate-400">
           inspired by <a class="underline underline-offset-2" href="https://nownownow.com/about" target="_blank" rel="noreferrer">nownownow.com</a> · edit this via <a class="underline underline-offset-2" href="/keystatic">/keystatic</a>
         </p>
       </section>

@@ -12,7 +12,11 @@ function formatStamp(d: Date) {
 }
 
 export default function TerminalStatusBar({ buildTime, commitSha, scope = 'home' }: TerminalStatusBarProps) {
-  const [now, setNow] = useState<Date>(() => new Date());
+  // Seed from the (stable) build time so the server-rendered HTML and the
+  // first client render agree; the interval below ticks it to live time after
+  // mount. suppressHydrationWarning on the output span covers the unavoidable
+  // server/client timezone-format difference on that first paint.
+  const [now, setNow] = useState<Date>(() => new Date(buildTime));
   const [visits, setVisits] = useState<number | null>(null);
 
   useEffect(() => {
@@ -46,7 +50,7 @@ export default function TerminalStatusBar({ buildTime, commitSha, scope = 'home'
 
   return (
     <div className="font-mono text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
-      <span className="tabular-nums">[{formatStamp(now)}]</span>
+      <span className="tabular-nums" suppressHydrationWarning>[{formatStamp(now)}]</span>
       <span className="flex items-center gap-1.5">
         <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_6px_rgba(16,185,129,0.6)]" />
         <span>online</span>

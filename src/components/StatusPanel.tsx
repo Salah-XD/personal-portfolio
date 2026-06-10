@@ -33,13 +33,13 @@ export default function StatusPanel({ mood, focus, learning, daysAgo }: StatusPa
       <ul className="space-y-2 text-sm sm:text-base">
         {rows.map(({ key, value, accent }) => (
           <li key={key} className="flex flex-wrap items-baseline gap-x-3">
-            <span className="text-slate-400 dark:text-slate-500 w-20 shrink-0">{key}:</span>
+            <span className="text-slate-500 dark:text-slate-400 w-20 shrink-0">{key}:</span>
             <span
               className={
                 accent
-                  ? 'text-emerald-600 dark:text-emerald-400'
+                  ? 'text-emerald-700 dark:text-emerald-400'
                   : key === 'touched' && stale
-                    ? 'text-amber-600 dark:text-amber-400'
+                    ? 'text-amber-700 dark:text-amber-400'
                     : 'text-slate-700 dark:text-slate-200'
               }
             >
