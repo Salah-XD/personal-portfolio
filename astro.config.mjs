@@ -55,9 +55,6 @@ export default defineConfig({
       wrap: true,
     },
   },
-  security: {
-    allowedDomains: [{ hostname: '**.vercel.app', protocol: 'https' }],
-  },
   vite: {
     define: {
       __BUILD_COMMIT__: JSON.stringify(buildCommit),
