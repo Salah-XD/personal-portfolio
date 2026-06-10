@@ -55,6 +55,13 @@ export default defineConfig({
       wrap: true,
     },
   },
+  security: {
+    // Astro's checkOrigin CSRF guard 403s body-less POSTs unless the browser Origin
+    // matches the URL it reconstructs from the proxy's forwarded headers — which
+    // mismatches on the custom domain (Vercel), killing the likes/views POSTs. These
+    // routes are harmless public counters that don't need CSRF, so disable the check.
+    checkOrigin: false,
+  },
   vite: {
     define: {
       __BUILD_COMMIT__: JSON.stringify(buildCommit),
