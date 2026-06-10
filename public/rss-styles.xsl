@@ -145,7 +145,7 @@
       <body>
         <main class="wrap">
           <section class="banner">
-            <div class="prompt">salah@portfolio:~$ cat /rss.xml</div>
+            <div class="prompt">salahxd@dev:~$ cat /rss.xml</div>
             <h1><xsl:value-of select="/rss/channel/title" /></h1>
             <p><xsl:value-of select="/rss/channel/description" /></p>
             <p class="hint">

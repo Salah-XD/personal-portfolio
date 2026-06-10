@@ -28,7 +28,7 @@ export default function StatusPanel({ mood, focus, learning, daysAgo }: StatusPa
       className="p-6 border rounded-lg font-mono border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/30"
     >
       <div className="text-sm mb-4 text-slate-600 dark:text-emerald-400">
-        salah@portfolio:~$ cat ~/.status
+        salahxd@dev:~$ cat ~/.status
       </div>
       <ul className="space-y-2 text-sm sm:text-base">
         {rows.map(({ key, value, accent }) => (

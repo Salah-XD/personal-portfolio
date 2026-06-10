@@ -62,7 +62,7 @@ export default function NewsletterForm({
       {variant === 'card' && (
         <>
           <div className="font-mono text-sm mb-2 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~$ ./subscribe --email
+            salahxd@dev:~$ ./subscribe --email
           </div>
           <h3 className="font-mono text-lg sm:text-xl mb-2">{title}</h3>
           <p className="text-sm text-slate-600 dark:text-slate-300 mb-4">{description}</p>

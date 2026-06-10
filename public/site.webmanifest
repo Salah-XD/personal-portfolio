@@ -1,0 +1,13 @@
+{
+  "name": "Mohd Salahudeen",
+  "short_name": "salahxd",
+  "description": "Mohd Salahudeen — software engineer & founder of QSat.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f172a",
+  "theme_color": "#0f172a",
+  "icons": [
+    { "src": "/favicon.svg", "type": "image/svg+xml", "sizes": "any" },
+    { "src": "/apple-touch-icon.png", "type": "image/png", "sizes": "180x180" }
+  ]
+}

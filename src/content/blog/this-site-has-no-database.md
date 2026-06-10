@@ -5,8 +5,8 @@ excerpt: "A blog with a full CMS, real comments, and live view counters — and 
 readTime: "7 min read"
 tags: ["Astro", "Architecture", "Serverless", "JAMstack"]
 category: "Engineering"
-author: "MD Salah"
-authorBio: "Founder, Developer, Designer & Engineer"
+author: "Mohd Salahudeen"
+authorBio: "Founder, software engineer & founder of QSat"
 ---
 
 Someone poked around this site — the blog, the admin panel at `/keystatic`, the little like button, the view counter ticking up on each post — and asked me what I was running for a backend.

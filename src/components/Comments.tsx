@@ -70,7 +70,7 @@ export default function Comments({
   return (
     <section className="mt-16">
       <h2 className="font-mono text-xl mb-6 text-slate-700 dark:text-emerald-400">
-        salah@portfolio:~/blog$ ./comments
+        salahxd@dev:~/blog$ ./comments
       </h2>
       <div ref={containerRef} />
     </section>

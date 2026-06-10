@@ -13,7 +13,7 @@ interface MobileNavProps {
   prompt?: string;
 }
 
-export default function MobileNav({ items, prompt = 'salah@portfolio:~$' }: MobileNavProps) {
+export default function MobileNav({ items, prompt = 'salahxd@dev:~$' }: MobileNavProps) {
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -44,12 +44,12 @@ export default function MobileNav({ items, prompt = 'salah@portfolio:~$' }: Mobi
       {open && typeof document !== 'undefined' && createPortal(
         <div
           data-lenis-prevent
-          className="md:hidden fixed inset-0 z-[60] bg-slate-200/60 dark:bg-black/60 backdrop-blur-lg animate-fade-up"
+          className="md:hidden fixed inset-0 z-[60] bg-slate-200/60 dark:bg-black/60 backdrop-blur-lg animate-fade-in"
           onClick={() => setOpen(false)}
         >
           <div
             data-lenis-prevent
-            className="absolute right-0 top-0 h-full w-72 max-w-[85vw] overflow-y-auto scrollbar-thin overscroll-contain bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 p-6 flex flex-col"
+            className="absolute right-0 top-0 h-full w-72 max-w-[85vw] overflow-y-auto scrollbar-thin overscroll-contain bg-slate-50 dark:bg-slate-900 border-l border-slate-200 dark:border-slate-700 p-6 flex flex-col animate-slide-in-right"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-8">

@@ -64,7 +64,7 @@ export default function KeyboardHelp() {
         className="w-full max-w-md rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 p-6 font-mono"
       >
         <div className="flex items-center justify-between mb-4">
-          <span className="text-sm text-slate-600 dark:text-emerald-400">salah@portfolio:~$ man shortcuts</span>
+          <span className="text-sm text-slate-600 dark:text-emerald-400">salahxd@dev:~$ man shortcuts</span>
           <button
             type="button"
             aria-label="Close"

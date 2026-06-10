@@ -23,7 +23,7 @@ export function useEntranceAnimations(scopeRef: RefObject<HTMLElement | null>) {
             ...vars,
             scrollTrigger: {
               trigger: el,
-              start: 'top 85%',
+              start: 'top 95%',
               toggleActions: 'play none none none',
             },
             ...(stagger ? { stagger } : {}),
@@ -33,7 +33,7 @@ export function useEntranceAnimations(scopeRef: RefObject<HTMLElement | null>) {
 
       animate('[data-anim="hero"]', { duration: 0.8, y: 12 });
       animate('[data-anim="card"]', {});
-      animate('[data-anim="project"]', { x: -20, y: 0 });
+      animate('[data-anim="project"]', { y: 16, duration: 0.4 });
       animate('[data-anim="skill"]', {});
       animate('[data-anim="blog-card"]', {});
 

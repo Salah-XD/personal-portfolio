@@ -36,8 +36,8 @@ export default config({
             itemLabel: props => props.value || 'New tag',
           }
         ),
-        author: fields.text({ label: 'Author', defaultValue: 'MD Salah' }),
-        authorBio: fields.text({ label: 'Author Bio', defaultValue: 'Founder, Developer, Designer & Engineer' }),
+        author: fields.text({ label: 'Author', defaultValue: 'Mohd Salahudeen' }),
+        authorBio: fields.text({ label: 'Author Bio', defaultValue: 'Founder, software engineer & founder of QSat' }),
         content: fields.markdoc({
           label: 'Content',
           options: {

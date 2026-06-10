@@ -2,11 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 
 import {
   Terminal,
-  Code,
-  Palette,
-  Mail,
-  Github,
-  Linkedin,
+  Rocket,
   GitBranch,
   FileText,
   Users,
@@ -22,7 +18,6 @@ import MobileNav from './MobileNav';
 import SmoothScroll, { smoothScrollTo } from './SmoothScroll';
 import NewsletterForm from './NewsletterForm';
 import AsciiBanner from './AsciiBanner';
-import AsciiProgressBar from './AsciiProgressBar';
 import Sparkline from './Sparkline';
 import TerminalStatusBar from './TerminalStatusBar';
 import SfxToggle from './SfxToggle';
@@ -32,9 +27,7 @@ import { useEntranceAnimations } from '../lib/useEntranceAnimations';
 import { applyTilt } from '../lib/tilt';
 import { runUrlCommand } from '../lib/urlCommand';
 import { setCrt } from './CrtOverlay';
-import { projects, skills, type Project } from '../config/portfolio';
-
-const skillCategories = ['all', 'languages', 'frontend', 'backend', 'architecture', 'design', 'business'];
+import { projects, author, qsat, type Project } from '../config/portfolio';
 
 const statusColor: Record<Project['status'], string> = {
   live: 'text-emerald-700 dark:text-emerald-400',
@@ -42,15 +35,7 @@ const statusColor: Record<Project['status'], string> = {
   archived: 'text-slate-500 dark:text-slate-400',
 };
 
-function timeBasedGreeting(): string {
-  const h = new Date().getHours();
-  if (h >= 5 && h < 12) return 'Good morning';
-  if (h >= 12 && h < 18) return 'Good afternoon';
-  if (h >= 18 && h < 23) return 'Good evening';
-  return 'Burning the midnight oil';
-}
-
-const fullText = `${timeBasedGreeting()} — I'm MD Salah, developer, designer & engineer`;
+const fullText = 'Mohd Salahudeen — software engineer & Entrepreneur.';
 
 interface Stats {
   postCount: number;
@@ -72,15 +57,6 @@ function decorativeTrend(target: number, points = 12): number[] {
     const jitter = Math.sin(i * 1.7 + target) * (target * 0.04);
     return Math.max(0, base + jitter);
   });
-}
-
-// Format a build timestamp deterministically in UTC. Using a fixed format
-// (rather than toLocaleString) keeps server and client output identical, so
-// React doesn't hit a hydration mismatch on locale/timezone differences.
-function formatBuildStamp(iso: string): string {
-  const d = new Date(iso);
-  const pad = (n: number) => String(n).padStart(2, '0');
-  return `${d.getUTCFullYear()}-${pad(d.getUTCMonth() + 1)}-${pad(d.getUTCDate())} ${pad(d.getUTCHours())}:${pad(d.getUTCMinutes())} UTC`;
 }
 
 interface LatestPost {
@@ -105,28 +81,8 @@ interface PortfolioProps {
 
 function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
   const [currentPath, setCurrentPath] = useState('~');
-  const [displayText, setDisplayText] = useState('');
   const [showCursor, setShowCursor] = useState(true);
-  const [activeSkillCategory, setActiveSkillCategory] = useState('all');
   const rootRef = useRef<HTMLDivElement | null>(null);
-
-  useEffect(() => {
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (reduce) {
-      setDisplayText(fullText);
-      return;
-    }
-    let index = 0;
-    const timer = setInterval(() => {
-      if (index < fullText.length) {
-        setDisplayText(fullText.slice(0, index + 1));
-        index++;
-      } else {
-        clearInterval(timer);
-      }
-    }, 60);
-    return () => clearInterval(timer);
-  }, []);
 
   useEffect(() => {
     const cursorTimer = setInterval(() => setShowCursor((p) => !p), 500);
@@ -165,25 +121,25 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
     if (target) smoothScrollTo(target);
   };
 
-  const filteredSkills =
-    activeSkillCategory === 'all'
-      ? skills
-      : skills.filter((skill) => skill.category === activeSkillCategory);
-
   const navItems = [
-    { label: './about', onClick: () => scrollToSection('about', '~/about') },
+    { label: './about', href: '/about' },
     { label: './projects', onClick: () => scrollToSection('projects', '~/projects') },
-    { label: './skills', onClick: () => scrollToSection('skills', '~/skills') },
-    { label: './metrics', onClick: () => scrollToSection('metrics', '~/metrics') },
     { label: './blog', href: '/blog' },
-    { label: './contact', onClick: () => scrollToSection('contact', '~/contact') },
+    { label: './press', href: '/press' },
   ];
 
   // Mobile drawer + footer "directory" surface — desktop top nav stays lean.
   const extraLinks = [
     { label: './now', href: '/now' },
     { label: './uses', href: '/uses' },
-    { label: './about (full)', href: '/about' },
+  ];
+
+  // Rendered as JSON output under the `cat social_links.json` prompt in the contact section.
+  const socialLinks = [
+    { key: 'email', value: author.email, href: `mailto:${author.email}` },
+    { key: 'github', value: 'github.com/Salah-XD', href: author.github },
+    { key: 'linkedin', value: 'linkedin.com/in/thisis-salah', href: author.linkedin },
+    { key: 'status', value: 'open to interesting problems & good conversations' },
   ];
 
   return (
@@ -198,7 +154,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
           <div className="flex items-center space-x-2 font-mono min-w-0">
             <Terminal className="w-5 h-5 shrink-0" />
             <span className="text-slate-600 dark:text-emerald-400 truncate">
-              salah@portfolio:{currentPath}$
+              salahxd@dev:{currentPath}$
             </span>
           </div>
 
@@ -239,83 +195,133 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
       <section className="pt-32 pb-20 px-4">
         <div className="max-w-4xl mx-auto" data-anim="hero">
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            guest@portfolio:~$ whoami
+            guest@dev:~$ whoami
           </div>
 
           <AsciiBanner />
 
           <h1 className="font-mono text-2xl md:text-4xl lg:text-5xl mb-8 leading-relaxed break-words">
-            {displayText}
+            {fullText}
             <span className={`${showCursor ? 'opacity-100' : 'opacity-0'} transition-opacity`}>|</span>
           </h1>
 
           <p className="font-mono text-base md:text-lg leading-relaxed max-w-2xl text-slate-600 dark:text-slate-300">
-            Building digital experiences that matter. I create, code, design, and lead with a focus on simplicity and impact.
+            I write the code and run the company — from GIS platforms to student satellites.
           </p>
+        </div>
+      </section>
 
-          <div className="mt-8 font-mono text-sm text-slate-600 dark:text-emerald-400">
-            guest@portfolio:~$ cat status.txt
-            <br />
-            <span className="text-slate-700 dark:text-slate-300 text-lg md:text-xl">
-              Currently engineering{' '}
+      {/* Ventures — QSat (the company I founded) */}
+      <section id="ventures" className="py-12 px-4" aria-labelledby="ventures-heading">
+        <div className="max-w-4xl mx-auto">
+          <div className="font-mono text-sm mb-3 text-slate-600 dark:text-emerald-400">
+            <GlitchText>salahxd@dev:~/ventures$ ls -la</GlitchText>
+          </div>
+
+          <div
+            data-anim="card"
+            className="rounded-lg border border-slate-200 dark:border-emerald-500/40 bg-slate-50 dark:bg-emerald-500/5 p-5 sm:p-6"
+          >
+            <div className="flex items-center flex-wrap gap-2 mb-2">
+              <Rocket className="w-5 h-5 text-slate-700 dark:text-emerald-400 shrink-0" />
+              <h2 id="ventures-heading" className="font-mono text-xl sm:text-2xl">{qsat.name}</h2>
+              <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                {qsat.role}
+              </span>
+            </div>
+
+            <p className="text-slate-600 dark:text-slate-300 mb-4 max-w-2xl text-sm leading-relaxed">
+              {qsat.tagline}
+            </p>
+
+            <ul className="space-y-1.5 mb-5 font-mono text-xs sm:text-sm">
+              {qsat.highlights.map((h) => (
+                <li key={h.label} className="flex gap-2">
+                  <span className="text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true">›</span>
+                  <span className="text-slate-600 dark:text-slate-300">
+                    <span className="text-slate-900 dark:text-slate-100 font-semibold">{h.label}</span>
+                    <span className="text-slate-400 dark:text-slate-500"> — </span>
+                    {h.detail}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-wrap gap-2 font-mono text-xs sm:text-sm">
               <a
-                className="text-slate-500 dark:text-slate-400 font-semibold underline underline-offset-2 hover:text-slate-700 dark:hover:text-slate-200 transition-colors"
-                href="https://qsat.diy"
+                href={qsat.url}
                 target="_blank"
                 rel="noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-slate-800 text-white dark:bg-emerald-500 dark:text-slate-900 hover:opacity-90 transition-opacity"
               >
-                QSAT
+                Visit {qsat.name}
+                <ArrowRight className="w-3.5 h-3.5" />
               </a>
-            </span>
+              <a
+                href="/press"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
+              >
+                Press &amp; launch coverage
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* About Section */}
-      <section id="about" className="py-20 px-4" aria-labelledby="about-heading">
+      {/* Blog Preview Section */}
+      <section className="py-20 px-4">
         <div className="max-w-4xl mx-auto">
-          <h2 id="about-heading" className="sr-only">About</h2>
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            <GlitchText>salah@portfolio:~/about$ ls -la</GlitchText>
+            <GlitchText>salahxd@dev:~/blog$ ls -t | head -3</GlitchText>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 md:gap-12">
-            <div className="space-y-6 md:space-y-8">
-              <div
-                data-anim="card"
-                className="p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
-              >
-                <Code className="w-8 h-8 mb-4 text-slate-600 dark:text-emerald-400" />
-                <h3 className="font-mono text-xl mb-2">Developer</h3>
-                <p className="text-slate-600 dark:text-slate-300">
-                  Full-stack engineering with focus on scalable architecture.
-                </p>
-              </div>
-            </div>
+          <div className="flex items-center justify-between mb-8 gap-4">
+            <h2 className="font-mono text-xl sm:text-2xl">Latest Posts</h2>
+            <a
+              href="/blog"
+              className="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
+            >
+              <span>View all</span>
+              <ArrowRight className="w-4 h-4" />
+            </a>
+          </div>
 
-            <div className="space-y-6 md:space-y-8">
+          <div className="space-y-6">
+            {latestPosts && latestPosts.length > 0 ? (
+              latestPosts.map((post) => (
+                <a
+                  key={post.slug}
+                  href={`/blog/${post.slug}`}
+                  data-anim="blog-card"
+                  className="block p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
+                >
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <time className="font-mono text-sm text-slate-600 dark:text-emerald-400">
+                      {post.date}
+                    </time>
+                  </div>
+                  <h3 className="font-mono text-lg sm:text-xl mb-3 transition-colors">
+                    {post.title}
+                  </h3>
+                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                    {post.excerpt}
+                  </p>
+                </a>
+              ))
+            ) : (
               <div
-                data-anim="card"
-                className="p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
+                data-anim="blog-card"
+                className="p-6 border border-dashed rounded-lg border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-800/30"
               >
-                <Palette className="w-8 h-8 mb-4 text-slate-600 dark:text-emerald-400" />
-                <h3 className="font-mono text-xl mb-2">Designer</h3>
-                <p className="text-slate-600 dark:text-slate-300">
-                  Crafting intuitive experiences through thoughtful design.
+                <p className="font-mono text-sm text-slate-600 dark:text-emerald-400 mb-2">
+                  salahxd@dev:~/blog$ ls -t
+                </p>
+                <p className="font-mono text-sm text-slate-500 dark:text-slate-400">
+                  No posts yet — first one is in the pipeline. Subscribe below to get it the moment it drops.
                 </p>
               </div>
-
-              <div
-                data-anim="card"
-                className="p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
-              >
-                <Terminal className="w-8 h-8 mb-4 text-slate-600 dark:text-emerald-400" />
-                <h3 className="font-mono text-xl mb-2">Engineer</h3>
-                <p className="text-slate-600 dark:text-slate-300">
-                  Systems thinking applied to complex technical challenges.
-                </p>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </section>
@@ -325,7 +331,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
         <div className="max-w-4xl mx-auto">
           <h2 id="projects-heading" className="sr-only">Projects</h2>
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            <GlitchText>salah@portfolio:~/projects$ git log --oneline</GlitchText>
+            <GlitchText>salahxd@dev:~/projects$ git log --oneline</GlitchText>
           </div>
 
           <div className="space-y-4">
@@ -378,49 +384,12 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section id="skills" className="py-20 px-4" aria-labelledby="skills-heading">
-        <div className="max-w-4xl mx-auto">
-          <h2 id="skills-heading" className="sr-only">Skills</h2>
-          <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            <GlitchText>salah@portfolio:~/skills$ top -o cpu</GlitchText>
-          </div>
-
-          <div className="mb-8">
-            <div className="flex flex-wrap gap-2 mb-6">
-              {skillCategories.map((category) => {
-                const active = activeSkillCategory === category;
-                return (
-                  <button
-                    key={category}
-                    onClick={() => setActiveSkillCategory(category)}
-                    className={`font-mono text-sm px-3 py-1 rounded transition-colors ${
-                      active
-                        ? 'bg-slate-800 text-white dark:bg-emerald-500 dark:text-slate-900'
-                        : 'bg-slate-200 text-slate-700 hover:bg-slate-300 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700'
-                    }`}
-                  >
-                    {category}
-                  </button>
-                );
-              })}
-            </div>
-
-            <div className="space-y-3">
-              {filteredSkills.map((skill) => (
-                <AsciiProgressBar key={skill.name} label={skill.name} value={skill.level} />
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Metrics Section */}
       <section id="metrics" className="py-20 px-4" aria-labelledby="metrics-heading">
         <div className="max-w-4xl mx-auto">
           <h2 id="metrics-heading" className="sr-only">By the numbers</h2>
           <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            <GlitchText>salah@portfolio:~/metrics$ iostat -x 1</GlitchText>
+            <GlitchText>salahxd@dev:~/metrics$ iostat -x 1</GlitchText>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6">
@@ -477,16 +446,13 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
           {/* System Monitor Style Display */}
           <div className="mt-12 p-6 border rounded-lg font-mono text-sm border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/30">
             <div className="mb-4 text-slate-700 dark:text-emerald-400">
-              salah@portfolio:~$ uptime
+              salahxd@dev:~$ neofetch
             </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {[
-                {
-                  label: 'Last build',
-                  value: stats ? formatBuildStamp(stats.buildTime) : '—',
-                },
+                { label: 'Currently', value: 'Building QSat' },
                 { label: 'Source', value: 'github.com/Salah-XD' },
-                { label: 'Stack', value: 'Astro · React · Tailwind' },
+                { label: 'Stack', value: 'Astro · React · TypeScript' },
               ].map(({ label, value }) => (
                 <div key={label} className="min-w-0">
                   <div className="text-slate-600 dark:text-slate-300">{label}</div>
@@ -506,7 +472,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
         <section id="status" className="py-12 px-4">
           <div className="max-w-4xl mx-auto">
             <div className="font-mono text-sm mb-6 text-slate-600 dark:text-emerald-400">
-              <GlitchText>salah@portfolio:~$ ./status --short</GlitchText>
+              <GlitchText>salahxd@dev:~$ ./status --short</GlitchText>
             </div>
             <StatusPanel
               mood={status.mood}
@@ -518,95 +484,38 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
         </section>
       )}
 
-      {/* Blog Preview Section */}
-      <section className="py-20 px-4">
-        <div className="max-w-4xl mx-auto">
-          <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            <GlitchText>salah@portfolio:~/blog$ ls -t | head -3</GlitchText>
-          </div>
-
-          <div className="flex items-center justify-between mb-8 gap-4">
-            <h2 className="font-mono text-xl sm:text-2xl">Latest Posts</h2>
-            <a
-              href="/blog"
-              className="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
-            >
-              <span>View all</span>
-              <ArrowRight className="w-4 h-4" />
-            </a>
-          </div>
-
-          <div className="space-y-6">
-            {latestPosts && latestPosts.length > 0 ? (
-              latestPosts.map((post) => (
-                <a
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  data-anim="blog-card"
-                  className="block p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
-                >
-                  <div className="flex items-center justify-between mb-3 sm:mb-4">
-                    <time className="font-mono text-sm text-slate-600 dark:text-emerald-400">
-                      {post.date}
-                    </time>
-                  </div>
-                  <h3 className="font-mono text-lg sm:text-xl mb-3 transition-colors">
-                    {post.title}
-                  </h3>
-                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-                </a>
-              ))
-            ) : (
-              <div
-                data-anim="blog-card"
-                className="p-6 border border-dashed rounded-lg border-slate-300 dark:border-slate-700 bg-white/60 dark:bg-slate-800/30"
-              >
-                <p className="font-mono text-sm text-slate-600 dark:text-emerald-400 mb-2">
-                  salah@portfolio:~/blog$ ls -t
-                </p>
-                <p className="font-mono text-sm text-slate-500 dark:text-slate-400">
-                  No posts yet — first one is in the pipeline. Subscribe below to get it the moment it drops.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
-      </section>
-
       {/* Contact Section */}
-      <section id="contact" className="py-20 px-4">
+      <section id="contact" className="py-20 px-4" aria-labelledby="contact-heading">
         <div className="max-w-4xl mx-auto">
-          <div className="font-mono text-sm mb-8 text-slate-600 dark:text-emerald-400">
-            <GlitchText>salah@portfolio:~/contact$ cat social_links.json</GlitchText>
+          <h2 id="contact-heading" className="sr-only">Contact</h2>
+          <div className="font-mono text-sm mb-4 text-slate-600 dark:text-emerald-400">
+            <GlitchText>salahxd@dev:~/contact$ cat social_links.json</GlitchText>
           </div>
 
-          <div className="text-center">
-            <h2 className="font-mono text-2xl md:text-3xl mb-8">Let's Connect</h2>
-
-            <p className="font-mono text-base md:text-lg mb-12 text-slate-600 dark:text-slate-300">
-              Always open to discussing new opportunities and interesting projects.
-            </p>
-
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
-              {[
-                { Icon: Mail, label: 'Email', href: 'mailto:thisissalah.dev@gmail.com' },
-                { Icon: Github, label: 'GitHub', href: 'https://github.com/Salah-XD' },
-                { Icon: Linkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/in/thisis-salah/' },
-              ].map(({ Icon, label, href }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target={href.startsWith('http') ? '_blank' : undefined}
-                  rel={href.startsWith('http') ? 'noreferrer' : undefined}
-                  className="flex items-center space-x-2 px-4 py-3 sm:p-4 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800/50"
-                >
-                  <Icon className="w-5 h-5" />
-                  <span className="font-mono">{label}</span>
-                </a>
-              ))}
-            </div>
+          <div className="font-mono text-sm sm:text-base rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-100/60 dark:bg-slate-900/60 p-5 sm:p-6 overflow-x-auto leading-relaxed">
+            <div className="text-slate-400 dark:text-slate-500">{'{'}</div>
+            {socialLinks.map((field, i) => (
+              <div key={field.key} className="pl-4 sm:pl-6 whitespace-nowrap">
+                <span className="text-sky-700 dark:text-sky-400">"{field.key}"</span>
+                <span className="text-slate-400 dark:text-slate-500">: </span>
+                {field.href ? (
+                  <a
+                    href={field.href}
+                    target={field.href.startsWith('http') ? '_blank' : undefined}
+                    rel={field.href.startsWith('http') ? 'noreferrer' : undefined}
+                    className="text-emerald-700 dark:text-emerald-400 underline decoration-dotted underline-offset-4 hover:decoration-solid"
+                  >
+                    "{field.value}"
+                  </a>
+                ) : (
+                  <span className="text-amber-700 dark:text-amber-400">"{field.value}"</span>
+                )}
+                <span className="text-slate-400 dark:text-slate-500">
+                  {i < socialLinks.length - 1 ? ',' : ''}
+                </span>
+              </div>
+            ))}
+            <div className="text-slate-400 dark:text-slate-500">{'}'}</div>
           </div>
         </div>
       </section>
@@ -624,18 +533,22 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
       <footer className="border-t py-8 border-slate-200 dark:border-slate-700">
         <div className="max-w-4xl mx-auto px-4 text-center space-y-3">
           <p className="font-mono text-xs sm:text-sm text-slate-600 dark:text-emerald-400 break-words">
-            salah@portfolio:~$ ls /
+            salahxd@dev:~$ ls /
           </p>
           <p className="font-mono text-xs sm:text-sm flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
             <a href="/" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./</a>
             <a href="/about" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./about</a>
             <a href="/now" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./now</a>
             <a href="/uses" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./uses</a>
+            <a href="/press" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./press</a>
             <a href="/blog" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./blog</a>
             <a href="/rss.xml" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./rss.xml</a>
           </p>
           <p className="font-mono text-xs sm:text-sm text-slate-600 dark:text-emerald-400 break-words pt-2">
-            salah@portfolio:~$ echo "Built with passion and precision by MD Salah"
+            salahxd@dev:~$ cat ~/.signature
+          </p>
+          <p className="font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300 break-words">
+            Mohd Salahudeen · software engineer &amp; founder of QSat
           </p>
           {stats && (
             <TerminalStatusBar buildTime={stats.buildTime} commitSha={stats.commitSha} />

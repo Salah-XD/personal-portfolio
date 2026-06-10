@@ -7,6 +7,7 @@ import Konami from '../components/Konami';
 import CrtOverlay from '../components/CrtOverlay';
 import KeyboardHelp from '../components/KeyboardHelp';
 import GlobalShortcuts from '../components/GlobalShortcuts';
+import { author } from '../config/portfolio';
 
 interface Props {
   title: string;
@@ -22,21 +23,66 @@ interface Props {
 
 const {
   title,
-  description = 'MD Salah — Developer, Designer & Engineer. Building digital experiences that matter.',
+  description = 'Mohd Salahudeen — software engineer & founder of QSat. I write the code and run the company.',
   ogImage,
   ogType = 'website',
   canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://salahxd.dev').toString(),
   publishedTime,
-  author = 'MD Salah',
+  author = 'Mohd Salahudeen',
   tags = [],
   noindex = false,
 } = Astro.props;
 
-const siteName = 'MD Salah';
+const siteName = 'Mohd Salahudeen';
 const twitterHandle = '@Salah_XD';
 const resolvedOgImage = ogImage
   ? new URL(ogImage, Astro.site ?? 'https://salahxd.dev').toString()
   : new URL('/og-default.png', Astro.site ?? 'https://salahxd.dev').toString();
+
+// Site-wide structured data. The Person + WebSite entities (with sameAs links)
+// tell Google/Bing that this site *is* the entity "Mohd Salahudeen" / "salahxd",
+// which is the core signal for ranking on the name and for rich results.
+const siteUrl = (Astro.site ?? new URL('https://salahxd.dev')).toString();
+const structuredData = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': `${siteUrl}#website`,
+    url: siteUrl,
+    name: 'Mohd Salahudeen',
+    alternateName: ['salahxd', 'Salah'],
+    inLanguage: 'en',
+    publisher: { '@id': `${siteUrl}#person` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Person',
+    '@id': `${siteUrl}#person`,
+    name: 'Mohd Salahudeen',
+    alternateName: ['salahxd', 'Salah', 'MD Salah'],
+    url: siteUrl,
+    image: `${siteUrl}og-default.png`,
+    jobTitle: 'Software Engineer & Founder',
+    description:
+      'Software engineer and founder of QSat — I build software and the company behind it.',
+    worksFor: {
+      '@type': 'Organization',
+      name: 'QSat',
+      url: 'https://qsat.vercel.app',
+      sameAs: ['https://www.instagram.com/qsat.diy/'],
+    },
+    knowsAbout: [
+      'Software Engineering',
+      'Web Development',
+      'GIS',
+      'Geospatial',
+      'CubeSats',
+      'Space Education',
+      'Startups',
+    ],
+    sameAs: [author.github, author.linkedin, 'https://x.com/Salah_XD'],
+  },
+];
 
 const sourceComment = [
   '<!--',
@@ -49,7 +95,7 @@ const sourceComment = [
   '  source:    https://github.com/Salah-XD/personal-portfolio',
   "  shortcuts: press '?' for the help dialog · ⌘K opens the palette",
   '  built:     Astro 5 · React 18 · Tailwind 3 · GSAP · Lenis · Pagefind',
-  '  by:        MD Salah, with intention',
+  '  by:        Mohd Salahudeen, with intention',
   '-->',
 ].join('\n');
 ---
@@ -67,6 +113,12 @@ const sourceComment = [
     <link rel="alternate" type="application/rss+xml" title={`${siteName} blog`} href="/rss.xml" />
     <link rel="sitemap" href="/sitemap-index.xml" />
 
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" type="image/png" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="#0f172a" />
+
     <meta property="og:type" content={ogType} />
     <meta property="og:site_name" content={siteName} />
     <meta property="og:title" content={title} />
@@ -75,6 +127,8 @@ const sourceComment = [
     <meta property="og:image" content={resolvedOgImage} />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={`${siteName} — ${title}`} />
+    <meta property="og:locale" content="en_US" />
     {publishedTime && <meta property="article:published_time" content={publishedTime} />}
     {ogType === 'article' && <meta property="article:author" content={author} />}
     {tags.map((t) => <meta property="article:tag" content={t} />)}
@@ -108,6 +162,8 @@ const sourceComment = [
         }
       })();
     </script>
+
+    <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
   </head>
   <body class="bg-slate-50 text-slate-900 dark:bg-slate-900 dark:text-slate-100">
     <slot />

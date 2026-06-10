@@ -16,23 +16,53 @@ export interface Author {
 }
 
 export const author: Author = {
-  name: 'MD Salah',
+  name: 'Mohd Salahudeen',
   handle: 'Salah-XD',
-  role: 'Developer · Designer · Engineer',
+  role: 'software engineer · founder of QSat',
   location: 'India',
   email: 'thisissalah.dev@gmail.com',
   github: 'https://github.com/Salah-XD',
   linkedin: 'https://www.linkedin.com/in/thisis-salah/',
   bio: [
-    "I build software products end to end — from the first sketch to the deploy pipeline. I care about systems that are simple to reason about, interfaces that get out of the way, and shipping things people actually use.",
-    "Most of my work lately has been at the intersection of frontend craft and small-team engineering: making fast static sites, designing component libraries, and keeping the deploy story boring.",
-    "I write here about the technical stuff I run into, the design choices behind products I admire, and the occasional founder-y note. Subscribe via the newsletter or RSS if any of that sounds useful.",
+    "I'm Salah, a developer, entrepreneur, and builder driven by curiosity.",
+    "Over the years, I've worked across software engineering, geospatial technologies, space education, and startup development—turning ideas into products that solve real problems. Whether it's building scalable web applications, designing GIS platforms, creating educational CubeSat programs, or launching new ventures, I enjoy working at the intersection of technology and impact.",
+    'I believe the best projects are born from asking simple questions: "Can this be done better?" and "What can we learn by building it ourselves?" That mindset has led me to develop products ranging from survey and geospatial platforms to STEM education initiatives that introduce students to space technology and engineering.',
+    "When I'm not coding or designing systems, you'll usually find me exploring new technologies, refining business ideas, teaching STEM concepts, or working on projects that combine innovation with practical value.",
+    "For me, technology is more than writing code—it's about creating tools, experiences, and opportunities that make a meaningful difference.",
   ],
   currentlyBuilding: {
-    name: 'QSAT',
-    url: 'https://qsat.diy',
-    description: 'a personal product I am working on right now',
+    name: 'QSat',
+    url: 'https://qsat.vercel.app',
+    description: 'the space education company I founded — making space tech accessible to every student.',
   },
+};
+
+// QSat — the space-education company I founded. Featured on the homepage and linked from the press page.
+export const qsat = {
+  name: 'QSat',
+  role: 'Founder',
+  tagline:
+    'A space education company I founded — making space tech accessible to every student.',
+  url: 'https://qsat.vercel.app',
+  instagram: 'https://www.instagram.com/qsat.diy/',
+  highlights: [
+    {
+      label: 'ParkSat',
+      detail: 'Student satellite w/ Park College, inaugurated by Nambi Narayanan.',
+    },
+    {
+      label: 'CubeSat Lab Kit',
+      detail: "India's first hands-on satellite kit.",
+    },
+    {
+      label: 'AstroKids & AstroRangers',
+      detail: 'Space-to-CubeSat learning pathways.',
+    },
+    {
+      label: 'Impact',
+      detail: 'Hundreds of students building real hardware.',
+    },
+  ],
 };
 
 export interface Project {
@@ -46,12 +76,47 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    name: 'qsat',
-    description: 'Personal product I am currently building.',
-    tech: ['Astro', 'React', 'TypeScript'],
-    status: 'development',
-    impact: 'In progress',
-    url: 'https://qsat.diy',
+    name: 'archify',
+    description:
+      'Architecture intelligence + client-side security for any web app, right in the browser — a local-first Chrome MV3 extension.',
+    tech: ['TypeScript', 'React', 'Svelte', 'WXT', 'Tailwind'],
+    status: 'live',
+    impact: 'Chrome extension',
+    url: 'https://github.com/Salah-XD/archify',
+  },
+  {
+    name: 'equipt',
+    description:
+      'Verified AI skills & agents for founders and operators — marketing, sales, ops, finance — scored on the Equipt Standard.',
+    tech: ['Astro', 'Claude', 'AI agents', 'TypeScript'],
+    status: 'live',
+    impact: 'AI agent marketplace',
+    url: 'https://github.com/Salah-XD/equipt',
+  },
+  {
+    name: 'appCN',
+    description:
+      'Mobile components you actually own — a shadcn-philosophy, copy-paste component library for React Native.',
+    tech: ['React Native', 'Expo', 'NativeWind', 'TypeScript'],
+    status: 'live',
+    impact: 'React Native UI kit',
+    url: 'https://github.com/Salah-XD/appCN',
+  },
+  {
+    name: 'glasswatch',
+    description: 'Outside-in, client-side scan engine — the Glasswatch collector (Apache-2.0).',
+    tech: ['TypeScript', 'Node.js'],
+    status: 'live',
+    impact: 'npm package',
+    url: 'https://github.com/Salah-XD/glasswatch',
+  },
+  {
+    name: 'dockshift',
+    description: 'A productive dock for developers.',
+    tech: ['JavaScript'],
+    status: 'live',
+    impact: 'Developer tool',
+    url: 'https://github.com/Salah-XD/dockshift',
   },
   {
     name: 'personal-portfolio',
@@ -61,8 +126,6 @@ export const projects: Project[] = [
     impact: 'Source on GitHub',
     url: 'https://github.com/Salah-XD/personal-portfolio',
   },
-  // Add more real projects here. Keep the fields truthful — empty is better than
-  // invented impact metrics.
 ];
 
 export interface Skill {

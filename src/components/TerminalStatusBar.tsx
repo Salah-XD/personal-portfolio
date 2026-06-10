@@ -46,7 +46,10 @@ export default function TerminalStatusBar({ buildTime, commitSha, scope = 'home'
     };
   }, [scope]);
 
-  const uptimeDays = Math.max(0, Math.floor((now.getTime() - new Date(buildTime).getTime()) / 86_400_000));
+  // Uptime counts from the site's launch, not the last build — so it grows
+  // steadily instead of resetting to 0 on every deploy.
+  const launch = new Date('2026-06-06T00:00:00Z');
+  const uptimeDays = Math.max(0, Math.floor((now.getTime() - launch.getTime()) / 86_400_000));
 
   return (
     <div className="font-mono text-[11px] sm:text-xs text-slate-600 dark:text-slate-400 flex flex-wrap items-center justify-center gap-x-3 gap-y-1">
@@ -56,7 +59,7 @@ export default function TerminalStatusBar({ buildTime, commitSha, scope = 'home'
         <span>online</span>
       </span>
       <span>build #{commitSha}</span>
-      <span>{uptimeDays}d uptime</span>
+      <span suppressHydrationWarning>{uptimeDays}d uptime</span>
       {visits != null && <span className="tabular-nums">· {visits.toLocaleString()} visits</span>}
     </div>
   );

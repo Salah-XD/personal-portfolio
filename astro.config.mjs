@@ -27,7 +27,21 @@ export default defineConfig({
     tailwind(),
     markdoc(),
     sitemap({
-      filter: (page) => !page.includes('/keystatic') && !page.includes('/og/'),
+      filter: (page) =>
+        !page.includes('/keystatic') && !page.endsWith('.png') && !page.endsWith('.xml'),
+      serialize(item) {
+        if (item.url === 'https://salahxd.dev/') {
+          item.priority = 1.0;
+          item.changefreq = 'weekly';
+        } else if (item.url.includes('/blog/')) {
+          item.priority = 0.7;
+          item.changefreq = 'monthly';
+        } else {
+          item.priority = 0.8;
+          item.changefreq = 'monthly';
+        }
+        return item;
+      },
     }),
     pagefind(),
     keystatic(),

@@ -26,7 +26,7 @@ export async function GET({ props }: APIContext) {
   const markup = html(`
     <div style="display:flex;flex-direction:column;width:1200px;height:630px;background:#0f172a;color:#f1f5f9;padding:64px;font-family:JetBrains Mono;justify-content:space-between;border:8px solid #10b981;">
       <div style="display:flex;align-items:center;gap:16px;color:#34d399;font-size:28px;">
-        <span>salah@portfolio:~/blog$ cat ${escape(post.id)}.md</span>
+        <span>salahxd@dev:~/blog$ cat ${escape(post.id)}.md</span>
       </div>
       <div style="display:flex;flex-direction:column;gap:24px;">
         <div style="font-size:64px;line-height:1.15;color:#f8fafc;font-weight:700;letter-spacing:-1px;">${escape(post.data.title)}</div>

@@ -69,7 +69,7 @@ function BlogList({ initialPosts }: BlogListProps) {
           </div>
 
           <div className="font-mono text-sm mb-4 text-slate-600 dark:text-emerald-400">
-            salah@portfolio:~/blog$ ls -la
+            salahxd@dev:~/blog$ ls -la
           </div>
 
           <h1 className="font-mono text-2xl sm:text-3xl md:text-4xl mb-4">Blog</h1>

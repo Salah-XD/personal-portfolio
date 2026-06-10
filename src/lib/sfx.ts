@@ -1,5 +1,5 @@
 // Web Audio synth-based SFX engine. No audio files; pure oscillator tones.
-// Off by default. Hard-disabled under prefers-reduced-motion.
+// On by default; muted only when the user explicitly mutes. Hard-disabled under prefers-reduced-motion.
 
 import { useEffect, useState } from 'react';
 
@@ -66,8 +66,8 @@ function sweep(from: number, to: number, durationMs: number, type: OscillatorTyp
 }
 
 export function isMuted(): boolean {
-  if (typeof window === 'undefined') return true;
-  return window.localStorage.getItem(STORAGE_KEY) !== '0';
+  if (typeof window === 'undefined') return false;
+  return window.localStorage.getItem(STORAGE_KEY) === '1';
 }
 
 export function setMuted(muted: boolean) {
@@ -106,7 +106,7 @@ export function play(name: Sound) {
 }
 
 export function useSfx() {
-  const [muted, setLocal] = useState<boolean>(() => (typeof window === 'undefined' ? true : isMuted()));
+  const [muted, setLocal] = useState<boolean>(() => (typeof window === 'undefined' ? false : isMuted()));
 
   useEffect(() => {
     const sync = () => setLocal(isMuted());

@@ -4,7 +4,7 @@ import { play } from '../lib/sfx';
 const STORAGE_KEY = 'salahxd:booted';
 
 const lines = [
-  '> booting salah@portfolio v2.0...',
+  '> booting salahxd@dev v2.0...',
   '> mounting filesystem ......... ok',
   '> loading projects ............ ok',
   '> loading blog index .......... ok',
