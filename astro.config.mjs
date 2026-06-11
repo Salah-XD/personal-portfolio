@@ -21,7 +21,9 @@ const buildCommit = (() => {
 export default defineConfig({
   site: 'https://salahxd.dev',
   output: 'static',
-  adapter: vercel(),
+  adapter: vercel({
+    webAnalytics: { enabled: true },
+  }),
   integrations: [
     react(),
     tailwind(),
