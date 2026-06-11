@@ -224,7 +224,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
           >
             <div className="flex items-center flex-wrap gap-2 mb-2">
               <Rocket className="w-5 h-5 text-slate-700 dark:text-emerald-400 shrink-0" />
-              <h2 id="ventures-heading" className="font-mono text-xl sm:text-2xl">{qsat.name}</h2>
+              <h2 id="ventures-heading" className="font-mono font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">{qsat.name}</h2>
               <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
                 {qsat.role}
               </span>
@@ -277,7 +277,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
           </div>
 
           <div className="flex items-center justify-between mb-8 gap-4">
-            <h2 className="font-mono text-xl sm:text-2xl">Latest Posts</h2>
+            <h2 className="font-mono font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">Latest Posts</h2>
             <a
               href="/blog"
               className="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
@@ -301,10 +301,10 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
                       {post.date}
                     </time>
                   </div>
-                  <h3 className="font-mono text-lg sm:text-xl mb-3 transition-colors">
+                  <h3 className="font-mono font-bold text-lg sm:text-xl mb-3 text-slate-900 dark:text-white transition-colors">
                     {post.title}
                   </h3>
-                  <p className="text-slate-600 dark:text-slate-300 leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 dark:text-slate-400 leading-relaxed">
                     {post.excerpt}
                   </p>
                 </a>
