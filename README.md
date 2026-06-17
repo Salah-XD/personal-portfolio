@@ -21,6 +21,7 @@ This repo is open source. Fork it, learn from it, build your own — see [Licens
 | Motion | Lenis + GSAP, gated behind `prefers-reduced-motion` |
 | Hosting | Vercel (`@astrojs/vercel`) |
 
+
 ## Getting started
 
 ```bash
