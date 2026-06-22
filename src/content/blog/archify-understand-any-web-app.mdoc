@@ -1,0 +1,70 @@
+---
+title: "See Through Any Web App"
+date: "2026-06-18"
+excerpt: "We made software dramatically easier to build and did almost nothing to make it easier to understand. Archify is the browser extension I built to close that gap — hover over any web app and see its components, APIs, and scripts."
+readTime: "4 min read"
+tags:
+  - Developer Tools
+  - Browser Extension
+  - DevTools
+category: Engineering
+author: Mohd Salahudeen
+authorBio: Founder, software engineer & founder of QSat
+---
+For most of software's history, writing code was the bottleneck. Today, understanding it is.
+
+AI can generate thousands of lines in seconds. Frameworks abstract away the hard parts, libraries hide their internals, and a single page pulls in dependencies that almost nobody ever opens and reads. We got very good at producing software, and we did almost nothing to make it easier to understand. That gap is the problem I kept running into — so I built a tool for it: Archify.
+
+## The questions that should take seconds
+
+Every day, developers lose hours to questions that have exact answers:
+
+- What component is rendering this?
+- Where is this data coming from?
+- Which API powers this feature?
+- What third-party scripts are running on this page?
+- What can actually reach user data?
+
+The answers all exist. They're just buried under layers of abstraction — scattered across DevTools panels, source maps, network tabs, and a repository you may not even have access to.
+
+## Understanding software shouldn't feel like archaeology
+
+When you land on an unfamiliar app, the routine is always the same. Open DevTools. Inspect elements. Dig through network requests. Search the source maps. Trace the API calls. Jump between docs, repos, and a dozen browser tabs until a mental model finally clicks into place.
+
+The information was never the hard part. Modern tooling is excellent at exposing implementation details — the individual requests, the minified bundles, the raw responses. It's far worse at exposing architecture: how those pieces actually connect. That's the part you end up reconstructing by hand, every single time.
+
+## What Archify does
+
+Archify is a browser extension that shows you what's actually happening behind any web app. Hover over an element and you instantly see:
+
+- The component rendering it
+- The framework or library behind it
+- The API connections powering it
+- The scripts running on the page
+- How those parts relate to each other
+
+Instead of spending an afternoon tracing behavior across tabs and files, you get the architecture directly — not just what exists, but how it fits together.
+
+## Built for understanding, not surveillance
+
+Most developer tools start from the assumption that your data should leave your machine. Archify doesn't. It runs entirely inside your browser:
+
+- No cloud processing
+- No server-side analysis
+- No source code uploads
+- No accounts
+- No hidden telemetry
+
+The systems you explore stay yours. That isn't a marketing line — it's the architecture. There's nothing on the other end to send your code to.
+
+## Why this matters now
+
+The industry is mid-shift. Generating code is becoming nearly free, but generated code still has to be reviewed, dependencies still have to be trusted, and applications still have to be understood. The ability to build is accelerating. The ability to comprehend isn't. Every day, that gap widens.
+
+I think the next generation of developer tools won't be judged by how much code they can write. They'll be judged by how quickly they help you understand what already exists. That's what Archify is for: making the act of understanding a piece of software as fast as the act of using it.
+
+## Coming soon
+
+Archify is getting ready for launch, and I'm inviting early users in now. If you've ever opened DevTools and wished the app would just explain itself, you're exactly who I'm building this for.
+
+[Join the waitlist at archify.salahxd.dev](https://archify.salahxd.dev) — be among the first to try it, and help shape what it becomes. Because software shouldn't be a black box.
