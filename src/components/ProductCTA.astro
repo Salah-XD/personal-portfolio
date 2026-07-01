@@ -11,6 +11,8 @@ interface Props {
   name?: string;
   description?: string;
   url?: string;
+  /** Override the button label (defaults to "Check out {name}"). */
+  label?: string;
 }
 
 const product = {
@@ -37,7 +39,7 @@ const product = {
       rel="noreferrer"
       class="inline-flex items-center gap-2 font-mono text-sm px-4 py-2 rounded bg-slate-800 text-white dark:bg-emerald-500 dark:text-slate-900 hover:opacity-90 transition-opacity"
     >
-      <span>Check out {product.name}</span>
+      <span>{Astro.props.label ?? `Check out ${product.name}`}</span>
       <ArrowRight className="w-4 h-4" />
     </a>
   </aside>

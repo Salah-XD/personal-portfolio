@@ -1,0 +1,68 @@
+---
+title: "Meet Archify"
+date: "2026-07-01"
+excerpt: "A couple of weeks ago I said Archify was coming and put up a waitlist. That post ended with 'coming soon.' This one doesn't — Archify is live as a Chrome extension. Hover over any web app and see how it's built, and what it's quietly doing to you."
+readTime: "4 min read"
+tags:
+  - Developer Tools
+  - Browser Extension
+  - Security
+  - DevTools
+category: Engineering
+author: Mohd Salahudeen
+authorBio: Founder, software engineer & founder of QSat
+---
+A couple of weeks ago I wrote that Archify was coming and asked people to join a waitlist. That post ended with "coming soon."
+
+This one doesn't. Archify is live. It's a Chrome extension, you can install it right now, and it does the thing I promised: you hover over any web app and it tells you how the app is built — without a single byte leaving your browser.
+
+## Ten seconds, not an afternoon
+
+The old routine for understanding an unfamiliar app is archaeology. Open DevTools, inspect elements, dig through the network tab, hunt for source maps, trace API calls across a dozen tabs until a mental model finally clicks.
+
+Archify collapses that into a hover. Install it, open any site, and move your cursor over the page. An overlay follows along, and for whatever you're pointing at it shows:
+
+- The **framework** behind it — React, Next.js, Vue, Angular, Svelte
+- The **component type** — dialog, menu, button, input, tooltip
+- The **UI library** — MUI, Ant, Bootstrap, Chakra, Radix
+- The **recent API calls** the page has made — method, path, status, latency
+
+Click to lock the overlay in place so you can read it properly. Press `Escape` to let it follow your cursor again. That's the whole interaction.
+
+## Every claim comes with a confidence — and it never makes names up
+
+This is the part I care about most, and it's the reason Archify took longer than a weekend.
+
+Most detection tools guess confidently and are wrong just often enough to waste your time. Archify does the opposite. Every claim it makes carries a confidence score, and when it can't actually prove something, it says `unknown` instead of inventing an answer.
+
+On a development build it can be specific. On a minified production bundle — where the component was named `a` and the class is `css-1q2w3e` — it will not fabricate a component name to look smart. It tells you what the runtime can actually prove and marks the rest honestly.
+
+My favorite example is shadcn/ui. At runtime it's just Radix primitives with Tailwind classes pasted in — genuinely indistinguishable from raw Radix once it's shipped. So Archify says **Radix**, and offers shadcn only as a low-confidence hint with a note explaining why it can't be sure. A tool that admits what it doesn't know is worth more than one that's confidently wrong.
+
+## The second tab I didn't mention last time: Security
+
+The waitlist post was all about architecture. Here's the part I saved: there's a second tab, and it changes the question from "how is this built?" to "what is this page doing to me?"
+
+Switch to **Security** and, for the page you're on, you get:
+
+- **Third-party scripts** — how many of the scripts running here come from someone other than the site itself
+- **Outbound calls** — how many network requests go out, and to how many third-party domains
+- **Form and payment field access** — and this is the sharp one: which scripts are in a position to read your **password**, **card number**, or **CVC** fields
+
+That last one works by watching which script attaches a listener to a sensitive input, and naming where that script came from. It's not an accusation — a script reading a field can be perfectly legitimate. It just makes visible something that is normally invisible: who is *technically able* to see what you type. Point it at a checkout page you don't run and you may find that list longer than you'd like.
+
+## Nothing leaves your browser
+
+Everything above happens locally. There is no cloud step, no server-side analysis, no source upload, no account, and no telemetry. Archify intercepts `fetch` and `XHR`, reads the framework globals, and inspects the DOM — all inside your tab — and renders the result right there.
+
+That isn't a privacy promise stapled onto the marketing. It's the architecture. There is no "other end" to send your code to, because I never built one. The systems you explore stay entirely yours.
+
+## What's not in it yet
+
+Honesty cuts both ways, so: v1 is deliberately small. There's no AI "explain this app" mode, no architecture graph, and no exports. It's Chrome-only for now. Those are on the roadmap, not in the box — and I'd rather ship something small and honest than something impressive and vague.
+
+## Install it
+
+If you've ever opened DevTools and wished the app would just explain itself, this is for you. It's free, it's local, and it installs in a click.
+
+[Install Archify at archify.salahxd.dev](https://archify.salahxd.dev) — then open any site, hover, and see what it's actually made of. Software shouldn't be a black box.

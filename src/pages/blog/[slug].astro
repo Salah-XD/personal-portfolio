@@ -116,7 +116,16 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
 
         <PostEngagement client:load slug={post.id} title={post.data.title} url={canonical} />
 
-        <ProductCTA />
+        {post.id === 'archify-is-live' ? (
+          <ProductCTA
+            name="Archify"
+            description="Understand any web app from your browser — its framework, APIs, and client-side security, all local. Now live as a Chrome extension."
+            url="https://archify.salahxd.dev"
+            label="Install Archify"
+          />
+        ) : (
+          <ProductCTA />
+        )}
 
         <div class="mt-12">
           <NewsletterForm client:visible variant="card" source={`post:${post.id}`} title="Liked this? Get the next one in your inbox." description="Short notes on tech and product, every week or two." />
