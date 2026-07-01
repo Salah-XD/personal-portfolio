@@ -1,0 +1,67 @@
+---
+title: "Fable 5 Is Back"
+date: "2026-07-02"
+excerpt: "For three weeks the most capable AI model available to the public simply wasn't available — not rate-limited, not degraded, gone. Anthropic shipped Fable 5 on June 9, the US government export-controlled it on June 12, and it came back July 1. I think the three weeks it was missing are more interesting than the model itself. And the model is very good."
+readTime: "5 min read"
+tags:
+  - AI
+  - Claude
+  - LLMs
+  - Opinion
+category: Engineering
+author: Mohd Salahudeen
+authorBio: Founder, software engineer & founder of QSat
+---
+For three weeks, the most capable AI model available to the public simply wasn't available. Not rate-limited, not quietly degraded — gone.
+
+Anthropic shipped [Claude Fable 5](https://www.anthropic.com/news/claude-fable-5-mythos-5) on June 9. The US government export-controlled it on June 12. And rather than try to check every user's passport in real time, Anthropic pulled it for everyone on the planet. As of July 1, it's [back](https://www.anthropic.com/news/redeploying-fable-5).
+
+I think the three weeks it was missing are more interesting than the model itself. And the model is very good.
+
+## What Fable 5 actually is
+
+Anthropic calls it a "Mythos-class model made safe for general use" — the first public release of the Mythos line that used to be locked to a handful of vetted organizations. In plain terms: it's the strongest model they've ever let the general public rent.
+
+The numbers back the marketing up. It was the first model to clear 90% on Hex's core analytics benchmark. Testers reported it building complete applications in a single attempt, and outperforming rivals on UI design and even game code. It ships with a 1M-token context window and up to 128k output tokens, and it can run autonomously on long, multi-step tasks longer than any Claude before it.
+
+It is not cheap: $10 per million input tokens and $50 per million output — double Opus 4.8. You're paying frontier prices for a frontier model. For the work I actually care about — understanding and building software — it's the best thing you can point at a hard problem right now.
+
+## Why it vanished
+
+On June 12, the reason showed up: Amazon researchers found a jailbreak that got Fable 5 to identify software vulnerabilities and demonstrate how to exploit them. The government treated that as a national-security capability and slapped export controls on the model, restricting it from foreign nationals — including, awkwardly, Anthropic's own international staff.
+
+Anthropic had no reliable way to verify anyone's nationality in real time, so they did the only all-or-nothing thing available: they turned it off for the entire world.
+
+Here's the knot at the center of all this, and it's worth sitting with. A model that is brilliant at understanding and modifying complex software helps defenders find bugs and helps attackers write exploits — with the *same* muscle. There is no version of "genuinely good at software" that is only good at the nice parts.
+
+I feel this one personally. I just shipped [Archify](https://archify.salahxd.dev), a tool whose entire pitch is understanding any app from the outside — its framework, its API calls, which scripts can read your password field. Same coin. Anything that reveals how software works reveals it to everyone who points it somewhere, including the people you'd rather it didn't help. You don't get the good version without shipping the capability.
+
+## What changed on the way back
+
+The export controls lifted on June 30, and Fable 5 redeployed globally on July 1. It didn't come back unchanged.
+
+Anthropic trained a new safety classifier aimed squarely at the reported bypass — they say it blocks that specific technique in over 99% of cases, and when it trips, it hands the request off to Opus 4.8 instead. They also widened the safety margins across the board, which means more benign requests get caught in the net so the genuinely dangerous ones can't slip through.
+
+They're refreshingly blunt about the cost of that: expect more false positives on routine coding and debugging. So the price of getting the frontier model back is that it will occasionally refuse to help you with a perfectly boring bug because it got twitchy. Annoying, honest, and — for now — probably the right call.
+
+The other detail I can't get past: the government's Center for AI Standards and Innovation tested both the old and new safeguards and called them "extraordinarily strong." That's the first time I can remember a model's safety being effectively co-signed by a government standards body as a *condition of shipping it*. Read that however you like. It's new.
+
+## The part nobody's talking about enough
+
+Underneath the capability headlines is a line that should bother anyone privacy-minded: Anthropic now mandates 30-day retention of all traffic — even for customers who previously had zero-retention agreements. The stated reason is detecting novel attacks, and given the last month, I understand the logic.
+
+But this, not the $50 per million tokens, is the real price. "You can use the best model, but we keep 30 days of everything you send it" is a meaningful shift, especially for the people who chose Anthropic *because* of zero retention. If that becomes the industry default, it's a bigger story than any benchmark. I'd keep a close eye on it.
+
+## Availability turned out to be a feature
+
+While Fable 5 was dark, the market moved. OpenAI previewed GPT-5.6 variants. Chinese models like Z.ai's GLM-5.2 picked up users for one boring, decisive reason: they stayed on. Open-weight models looked more attractive than usual — nobody can reach into your servers and flip a switch on a model you host yourself.
+
+That's the lesson I'm taking. For anything in production, "is it the smartest?" matters less than "will it be there next Tuesday?" A model that can be pulled by a government directive on short notice is a fundamentally different kind of dependency than one running on hardware you control. Smart is a feature. Available is a feature too, and we just watched it matter more.
+
+## So, should you use it?
+
+Through July 7, Pro, Max, Team, and select Enterprise plans include Fable 5 for up to 50% of weekly usage; after that it moves to usage credits. So there's a real window to try it without watching the meter.
+
+My honest position: yes — reach for it on the hard stuff, the long, genuinely difficult, multi-step problems where it pulls ahead of everything else. Keep Opus 4.8 for the routine work, where you don't want a jumpy classifier second-guessing your refactor and you'd rather not pay double. And treat the retention change as a real fact about your data, not a footnote.
+
+The model coming back is good news. What the last three weeks showed us — that the best model on the market can be switched off by policy, and switched back on with your data as part of the deal — is the *news*.
