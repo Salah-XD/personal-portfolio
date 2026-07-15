@@ -23,7 +23,7 @@ interface Props {
 
 const {
   title,
-  description = 'Mohd Salahudeen — software engineer & founder of QSat. I write the code and run the company.',
+  description = 'Mohd Salahudeen — software engineer & founder of QSat & ShineUp. I write the code and run the companies.',
   ogImage,
   ogType = 'website',
   canonical = new URL(Astro.url.pathname, Astro.site ?? 'https://salahxd.dev').toString(),
@@ -64,13 +64,24 @@ const structuredData = [
     image: `${siteUrl}og-default.png`,
     jobTitle: 'Software Engineer & Founder',
     description:
-      'Software engineer and founder of QSat — I build software and the company behind it.',
-    worksFor: {
-      '@type': 'Organization',
-      name: 'QSat',
-      url: 'https://qsat.vercel.app',
-      sameAs: ['https://www.instagram.com/qsat.diy/'],
-    },
+      'Software engineer and founder of QSat and ShineUp — I build software and the companies behind it.',
+    worksFor: [
+      {
+        '@type': 'Organization',
+        name: 'QSat',
+        url: 'https://qsat.vercel.app',
+        sameAs: ['https://www.instagram.com/qsat.diy/'],
+      },
+      {
+        '@type': 'Organization',
+        name: 'ShineUp',
+        url: 'https://shineup.digital',
+        sameAs: [
+          'https://www.instagram.com/shineup.digital/',
+          'https://www.linkedin.com/company/shineup-digital/',
+        ],
+      },
+    ],
     knowsAbout: [
       'Software Engineering',
       'Web Development',

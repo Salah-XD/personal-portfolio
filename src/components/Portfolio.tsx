@@ -3,6 +3,7 @@ import { useEffect, useRef, useState } from 'react';
 import {
   Terminal,
   Rocket,
+  Zap,
   GitBranch,
   FileText,
   Users,
@@ -27,7 +28,7 @@ import { useEntranceAnimations } from '../lib/useEntranceAnimations';
 import { applyTilt } from '../lib/tilt';
 import { runUrlCommand } from '../lib/urlCommand';
 import { setCrt } from './CrtOverlay';
-import { projects, author, qsat, type Project } from '../config/portfolio';
+import { projects, author, qsat, shineup, type Project } from '../config/portfolio';
 
 const statusColor: Record<Project['status'], string> = {
   live: 'text-emerald-700 dark:text-emerald-400',
@@ -262,6 +263,48 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
                 className="inline-flex items-center gap-2 px-3 py-1.5 rounded border border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
               >
                 Press &amp; launch coverage
+                <ArrowRight className="w-3.5 h-3.5" />
+              </a>
+            </div>
+          </div>
+
+          <div
+            data-anim="card"
+            className="mt-4 rounded-lg border border-slate-200 dark:border-emerald-500/40 bg-slate-50 dark:bg-emerald-500/5 p-5 sm:p-6"
+          >
+            <div className="flex items-center flex-wrap gap-2 mb-2">
+              <Zap className="w-5 h-5 text-slate-700 dark:text-emerald-400 shrink-0" />
+              <h2 className="font-mono font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">{shineup.name}</h2>
+              <span className="font-mono text-[11px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border border-emerald-500/30">
+                {shineup.role}
+              </span>
+            </div>
+
+            <p className="text-slate-600 dark:text-slate-300 mb-4 max-w-2xl text-sm leading-relaxed">
+              {shineup.tagline}
+            </p>
+
+            <ul className="space-y-1.5 mb-5 font-mono text-xs sm:text-sm">
+              {shineup.highlights.map((h) => (
+                <li key={h.label} className="flex gap-2">
+                  <span className="text-emerald-600 dark:text-emerald-400 shrink-0" aria-hidden="true">›</span>
+                  <span className="text-slate-600 dark:text-slate-300">
+                    <span className="text-slate-900 dark:text-slate-100 font-semibold">{h.label}</span>
+                    <span className="text-slate-400 dark:text-slate-500"> — </span>
+                    {h.detail}
+                  </span>
+                </li>
+              ))}
+            </ul>
+
+            <div className="flex flex-wrap gap-2 font-mono text-xs sm:text-sm">
+              <a
+                href={shineup.url}
+                target="_blank"
+                rel="noreferrer"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded bg-slate-800 text-white dark:bg-emerald-500 dark:text-slate-900 hover:opacity-90 transition-opacity"
+              >
+                Visit {shineup.name}
                 <ArrowRight className="w-3.5 h-3.5" />
               </a>
             </div>
@@ -548,7 +591,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
             salahxd@dev:~$ cat ~/.signature
           </p>
           <p className="font-mono text-xs sm:text-sm text-slate-700 dark:text-slate-300 break-words">
-            Mohd Salahudeen · software engineer &amp; founder of QSat
+            Mohd Salahudeen · software engineer &amp; founder of QSat &amp; ShineUp
           </p>
           {stats && (
             <TerminalStatusBar buildTime={stats.buildTime} commitSha={stats.commitSha} />

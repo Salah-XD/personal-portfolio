@@ -18,7 +18,7 @@ export interface Author {
 export const author: Author = {
   name: 'Mohd Salahudeen',
   handle: 'Salah-XD',
-  role: 'software engineer · founder of QSat',
+  role: 'software engineer · founder of QSat & ShineUp',
   location: 'India',
   email: 'thisissalah.dev@gmail.com',
   github: 'https://github.com/Salah-XD',
@@ -62,6 +62,23 @@ export const qsat = {
       label: 'Impact',
       detail: 'Hundreds of students building real hardware.',
     },
+  ],
+};
+
+// ShineUp — the software, cloud & marketing studio I run. Featured on the
+// homepage alongside QSat and linked bidirectionally with shineup.digital.
+export const shineup = {
+  name: 'ShineUp',
+  role: 'Founder & CEO',
+  tagline:
+    'A software, cloud, and marketing studio. We design, build, host, and grow digital products end to end, so clients get one team instead of four vendors.',
+  url: 'https://shineup.digital',
+  instagram: 'https://www.instagram.com/shineup.digital/',
+  highlights: [
+    { label: 'Software', detail: 'Websites, apps, and in-house CRM/ERP.' },
+    { label: 'Cloud', detail: 'Managed hosting and VPS, kept running.' },
+    { label: 'Marketing', detail: 'Brand and campaigns that get products found.' },
+    { label: 'Impact', detail: '50+ projects shipped for 30+ clients.' },
   ],
 };
 
