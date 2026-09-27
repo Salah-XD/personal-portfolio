@@ -3,7 +3,7 @@ title: This Site Has No Database, But It Has a CMS, Comments, Likes, and Views
 published: true
 description: No server, no database, nothing for me to babysit — yet the likes save, the views count, and the comments are real. Here's where all of it actually goes.
 tags: webdev, architecture, serverless, astro
-canonical_url: https://salahxd.dev/blog/this-site-has-no-database
+canonical_url: https://salahxd.dev/blog/this-site-has-no-database/
 ---
 
 The title isn't a trick. This site has a full CMS with an admin panel at `/keystatic`, real comments under every post, a like button that remembers you, and view counters that tick up. And there is no database behind any of it — at least, none that I run.
@@ -103,4 +103,4 @@ But they describe most personal sites and content sites. And for those, the best
 
 ---
 
-*Originally published at [salahxd.dev](https://salahxd.dev/blog/this-site-has-no-database) — the likes, views, and comments from the title live there. Go increment a Redis key.*
+*Originally published at [salahxd.dev](https://salahxd.dev/blog/this-site-has-no-database/) — the likes, views, and comments from the title live there. Go increment a Redis key.*

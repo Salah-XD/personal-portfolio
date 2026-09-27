@@ -151,7 +151,7 @@ function BlogList({ initialPosts }: BlogListProps) {
                   </span>
                 </div>
 
-                <a href={`/blog/${post.slug}`} className="group">
+                <a href={`/blog/${post.slug}/`} className="group">
                   <h2 className="font-mono font-bold text-lg sm:text-xl md:text-2xl mb-3 text-slate-900 dark:text-white group-hover:text-slate-700 dark:group-hover:text-emerald-400 transition-colors break-words">
                     {post.title}
                   </h2>
@@ -177,7 +177,7 @@ function BlogList({ initialPosts }: BlogListProps) {
                   </div>
 
                   <a
-                    href={`/blog/${post.slug}`}
+                    href={`/blog/${post.slug}/`}
                     className="font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
                   >
                     Read more →

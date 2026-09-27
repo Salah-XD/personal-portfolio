@@ -322,7 +322,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
           <div className="flex items-center justify-between mb-8 gap-4">
             <h2 className="font-mono font-bold text-xl sm:text-2xl text-slate-900 dark:text-white">Latest Posts</h2>
             <a
-              href="/blog"
+              href="/blog/"
               className="flex items-center space-x-2 font-mono text-sm hover:text-slate-700 dark:hover:text-emerald-400 transition-colors"
             >
               <span>View all</span>
@@ -335,7 +335,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
               latestPosts.map((post) => (
                 <a
                   key={post.slug}
-                  href={`/blog/${post.slug}`}
+                  href={`/blog/${post.slug}/`}
                   data-anim="blog-card"
                   className="block p-6 border rounded-lg transition-all duration-300 hover-card border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800/50 hover:border-slate-300 dark:hover:border-slate-600"
                 >
@@ -584,7 +584,7 @@ function Portfolio({ stats, latestPosts, status }: PortfolioProps) {
             <a href="/now" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./now</a>
             <a href="/uses" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./uses</a>
             <a href="/press" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./press</a>
-            <a href="/blog" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./blog</a>
+            <a href="/blog/" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./blog</a>
             <a href="/rss.xml" className="text-slate-700 dark:text-slate-200 hover:text-slate-900 dark:hover:text-emerald-400">./rss.xml</a>
           </p>
           <p className="font-mono text-xs sm:text-sm text-slate-600 dark:text-emerald-400 break-words pt-2">
