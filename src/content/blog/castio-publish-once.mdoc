@@ -1,0 +1,139 @@
+---
+title: "Publish Once, Own the Original"
+date: "2026-09-29"
+excerpt: "Every cross-post of your blog competes with the original unless it carries a canonical link back, and nobody re-checks. castio is the tool I built to publish once on my own site and keep every copy pointing home."
+readTime: "8 min read"
+tags:
+  - Developer Tools
+  - Blogging
+  - SEO
+  - NestJS
+  - Self-Hosting
+category: Engineering
+author: Mohd Salahudeen
+authorBio: Founder, software engineer & founder of QSat
+---
+Most developer writing gets read on someone else's website. DEV, Hashnode, Medium, a Bluesky post, a Hacker News thread. That's where the readers are, and your own site is often the last place they land.
+
+I'm fine with that. What I'm not fine with is each of those copies competing with the original in search, because the canonical link was never set, was set slightly wrong, or was set once and never checked again.
+
+So I built castio. I publish on my own site the way I always have, push to git, and castio takes it from there. It waits until the post is actually live and shows me exactly what each platform will get. It posts where it can, hands me a ready-made kit where it can't, and then keeps checking that every copy still points home. The original is yours, and every copy should say so. That should hold every day after you post it, not just on the day itself.
+
+## Cross-posting is easy. Cross-posting correctly is tedious.
+
+The fix for duplicate content is old and boring: a canonical link. A copy that says "the original lives over there" stops competing with the original. The problem is that every platform handles it differently:
+
+- **DEV** has a canonical URL field on each article.
+- **Medium** and **Hashnode** each have their own canonical / original-URL setting, in their own corner of their own UI.
+- **Bluesky, LinkedIn, Hacker News and Reddit** don't copy the post at all. They're just posts that link to you.
+
+None of that is hard. It's tedious, which is worse. Tedious work gets done by hand, a little differently each time, and then forgotten. A missing or slightly-off canonical doesn't throw an error or show a warning. It just sits there.
+
+And nobody goes back three months later to re-check.
+
+![salahxd.dev as the original, with DEV, Hashnode and Medium carrying canonical links back to it, and Bluesky, LinkedIn, Hacker News and Reddit linking to it](/images/blog/castio/canonical-first.png)
+
+*salahxd.dev is the original. The copies point back to it, and the posts link to it.*
+
+## The first thing castio caught was my own site
+
+Building castio's canonical check meant looking hard at my own site first, and it didn't pass.
+
+My site linked to posts without a trailing slash, but the canonical tag on each post used the URL *with* one. So every post had two URLs, `/blog/some-post` and `/blog/some-post/`. A person would call those the same page. A crawler sees two different URLs.
+
+castio compares the live canonical against the expected URL exactly, so none of my posts would ever have been marked Ready until the two agreed. I fixed the site, and links now end in `/`. The dashboard now says it right under the URL pattern field: "The trailing slash matters." I wrote that line for myself first.
+
+The other honest one: I have an older DEV article whose canonical I still need to fix by hand. castio only manages what it publishes, so that one's on me.
+
+## Push, wait, approve, publish, verify
+
+Here's the whole flow, in the order it happens.
+
+**Push.** I write the way I always have: an Astro site, posts as files in `src/content/blog`, in a GitHub repo. castio is a GitHub App installed on that one repo with read-only Contents access. When I push, a webhook tells castio a post was added or changed. castio verifies the webhook signature before it trusts any of the payload.
+
+**Wait.** A push isn't a deploy. castio keeps checking the live URL until the post is actually up *and* its `<link rel="canonical">` matches the expected URL exactly. Only then is the article Ready. It never distributes a post that isn't live yet, so no cross-post ever points at a 404.
+
+**Approve.** The preview shows exactly what each platform will receive. Nothing goes out without my approval. I can send it now or schedule it, in my timezone.
+
+**Publish.** Two platforms are fully automatic:
+
+- **DEV** goes through the API with `canonical_url` set. I can publish or save as a draft, with an optional "Originally published at" footer.
+- **Bluesky** gets a post with a link card, built from a template with `{title}` and `{excerpt}`. It connects with proper atproto OAuth, with no app passwords.
+
+LinkedIn, Hacker News, Reddit, Medium and Hashnode get copy-paste kits. castio prepares everything, then I post it and mark it done. I never set out to automate every platform. What I wanted was to know where every copy lives.
+
+**Verify.** After publishing, castio fetches every copy and checks that its canonical points back to the original. Then it checks again every day. If a copy drifts, it gets flagged as needing action and I get a notification, plus an email if I've turned that on.
+
+That last step is the one I actually care about. Everything before it saves me time. Verification is the part I'd never do myself.
+
+![The castio pipeline: git push, GitHub webhook, castio waits until the post is live with a correct canonical, Ready, preview and approve, DEV and Bluesky posted automatically, copy-paste kits for the rest, every canonical verified and re-checked daily](/images/blog/castio/pipeline.png)
+
+*From git push to verified copies. The only manual steps are approving, and posting the kits.*
+
+One more boring detail I'm glad I handled early: secrets like the DEV API key are stored encrypted under a versioned keyring, so keys can be rotated, and they're never shown again once saved.
+
+## Failures are per platform, not all-or-nothing
+
+The easy way to build this is one big "distribute" job that either works or doesn't. That's the wrong shape. If Bluesky has a bad minute, DEV shouldn't care.
+
+So every platform gets its own publication with its own state:
+
+- The automatic path is `draft → queued → publishing → published → verified`.
+- If publishing fails, it goes to `failed`, then back to `queued` for a retry.
+- If something goes wrong while publishing, or later with a published or verified copy, it lands in `needs_action`. From there it goes back to `queued`, or on to `verified` once it's sorted.
+- Copy-paste kits take their own path: `draft → manual_pending → manual_done → verified`.
+- Anything not sent yet can be `skipped`.
+
+Written down, that's a lot of states. In practice it means a failure is one row with one clear next step. I never have to wonder what did and didn't go out.
+
+![The per-platform publication state machine, covering the automatic path, retries through failed, needs_action, the manual copy-paste path, and skipped](/images/blog/castio/publication-states.png)
+
+*One state machine per platform. A failure on one never blocks the others.*
+
+## One Docker image, three jobs
+
+The stack is a pnpm + Turborepo monorepo. There's a NestJS API, a BullMQ worker, Postgres via Drizzle, and Redis. The dashboard is Next.js with the App Router and TanStack Query.
+
+The API and the worker ship as the same Docker image. So does the migration step:
+
+```bash
+node dist/start.js api
+node dist/start.js worker
+node dist/start.js migrate
+```
+
+Migrations run on start behind a Postgres advisory lock, so two containers booting at the same moment never both try to migrate.
+
+The browser only ever talks to one origin. The dashboard lives on Vercel at castio.salahxd.dev and rewrites `/api/*` to the API at castio-api.salahxd.dev. The API runs next to the worker on my VPS, deployed with Dokploy. The GitHub push webhook skips the dashboard and goes straight to the API domain.
+
+Tests run against real Postgres and Redis through Testcontainers, with no mocked database quietly agreeing with everything.
+
+![castio deployment: the browser talks to the Next.js dashboard on Vercel, which rewrites /api/* to the NestJS API on a VPS behind Dokploy and Traefik; the API and a BullMQ worker from the same image share Postgres and Redis; the GitHub webhook goes directly to the API](/images/blog/castio/architecture.png)
+
+*The dashboard on Vercel, the API and worker on my VPS. One image, one browser origin.*
+
+## Four things that broke on the way to production
+
+None of these were bugs in the logic. All of them showed up at deploy time.
+
+**1. GitHub webhooks are bigger than you'd expect.** A push webhook can be up to 25 MB. Express and Nest default to a 100 kb JSON body limit. I gave only the webhook route a 25 MB parser, and every other route keeps 100 kb. The gotcha is that Nest silently skips registering its own body parsers if it finds a middleware function named `jsonParser`. So the wrapper got a different name.
+
+**2. Multi-line secrets don't survive every env editor.** I pasted the GitHub App's PEM private key into Dokploy's env editor, and only the first line survived. To its credit, Octokit's error said exactly that: the key "contains only the first line". The fix was to store it on one line with literal `\n` and let the config turn those back into real newlines.
+
+**3. Certificates can race your DNS.** Let's Encrypt tried to issue the API's certificate before the DNS record existed. It got NXDOMAIN, and Traefik fell back to serving its default cert. Nothing retries on its own. Once DNS resolves, you have to nudge Traefik into trying again, which in Dokploy means re-saving the domain.
+
+**4. Next.js rewrites are decided at build time.** Rewrites are baked in when you build, so the API URL has to exist during the build. Turborepo's strict env mode silently drops any env var not declared in `turbo.json`. One line fixed it:
+
+```json
+"env": ["API_INTERNAL_URL"]
+```
+
+Three of those four failed quietly, with no crash and no warning. Things just weren't right. Silent drift is exactly the problem castio exists to catch in canonicals.
+
+## This post is the first one castio ships
+
+castio is v0. I built it for my own site first, and that's the only site it runs on. If it earns its keep here, it might turn into something other developers can use. No promises.
+
+If you're reading this on DEV or Bluesky, castio put it there, and the canonical points back to salahxd.dev. View the source if you like. castio already checked it, and it'll check again tomorrow.
+
+If you'd want something like this for your own blog, tell me. That's the only signal I'm looking for.
