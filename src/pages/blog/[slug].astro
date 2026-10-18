@@ -218,24 +218,31 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
   />
 
   <script>
-    // Render ```mermaid fences client-side. Shiki leaves them as
-    // <pre data-language="mermaid">; the library is only fetched when a post has one.
-    const blocks = Array.from(document.querySelectorAll<HTMLElement>('pre[data-language="mermaid"]'));
+    // Render Mermaid diagrams client-side. remarkMermaid ships each one as a static
+    // image (for importers) with its source in data-mermaid; the library is only
+    // fetched when a post has one.
+    const figures = Array.from(document.querySelectorAll<HTMLElement>('figure[data-mermaid]'));
 
-    if (blocks.length > 0) {
-      const diagrams = blocks.map((pre) => {
+    if (figures.length > 0) {
+      const diagrams = figures.map((figure) => {
+        const img = figure.querySelector('img');
         const container = document.createElement('div');
-        container.className = 'mermaid-diagram not-prose my-8 overflow-x-auto';
+        container.className = 'overflow-x-auto';
         container.setAttribute('role', 'img');
         container.setAttribute('aria-label', 'Diagram');
-        pre.insertAdjacentElement('afterend', container);
-        pre.hidden = true;
-        // Read from <code>: the copy-button script appends UI text to the <pre> itself.
-        const source = (pre.querySelector('code') ?? pre).textContent ?? '';
-        return { pre, container, source };
+        container.hidden = true;
+        figure.append(container);
+        if (img) img.hidden = true;
+        return { img, container, source: figure.dataset.mermaid ?? '' };
       });
 
-      const { default: mermaid } = await import('mermaid');
+      let mermaid: typeof import('mermaid').default;
+      try {
+        ({ default: mermaid } = await import('mermaid'));
+      } catch {
+        for (const d of diagrams) if (d.img) d.img.hidden = false;
+        throw new Error('Mermaid failed to load; showing static diagram images');
+      }
       let run = 0;
 
       const renderAll = async () => {
@@ -262,11 +269,11 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
               if (naturalWidth) el.style.minWidth = `${Math.min(naturalWidth, 560)}px`;
             }
             d.container.hidden = false;
-            d.pre.hidden = true;
+            if (d.img) d.img.hidden = true;
           } catch {
-            // Fall back to showing the diagram source rather than a blank gap.
+            // Fall back to the static image rather than a blank gap.
             d.container.hidden = true;
-            d.pre.hidden = false;
+            if (d.img) d.img.hidden = false;
           }
         }
       };

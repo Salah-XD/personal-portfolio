@@ -7,6 +7,7 @@ import markdoc from '@astrojs/markdoc';
 import sitemap from '@astrojs/sitemap';
 import pagefind from 'astro-pagefind';
 import vercel from '@astrojs/vercel';
+import remarkMermaid from './src/lib/remarkMermaid.js';
 
 const buildCommit = (() => {
   if (process.env.VERCEL_GIT_COMMIT_SHA) return process.env.VERCEL_GIT_COMMIT_SHA.slice(0, 7);
@@ -49,6 +50,7 @@ export default defineConfig({
     keystatic(),
   ],
   markdown: {
+    remarkPlugins: [remarkMermaid],
     shikiConfig: {
       themes: {
         light: 'github-light',
