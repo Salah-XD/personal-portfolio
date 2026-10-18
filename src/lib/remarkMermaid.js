@@ -23,9 +23,10 @@ export default function remarkMermaid() {
       return {
         type: 'html',
         value:
-          `<figure class="mermaid-diagram not-prose my-8" data-mermaid="${escapeAttr(child.value)}">` +
+          `<figure class="mermaid-diagram not-prose my-8 text-center" data-mermaid="${escapeAttr(child.value)}">` +
+          // No inline display: it would override the hidden attribute the page script sets.
           `<img src="${mermaidImageUrl(child.value)}" alt="Diagram" loading="lazy" decoding="async" ` +
-          `style="display:block;margin:0 auto;max-width:100%;height:auto">` +
+          `style="max-width:100%;height:auto">` +
           `</figure>`,
       };
     });
