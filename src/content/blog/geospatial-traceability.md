@@ -2,7 +2,7 @@
 title: "Geospatial Traceability: Connecting Farm Mapping, Satellite Intelligence, and Supply Chains"
 date: "2026-10-18"
 excerpt: "How geospatial traceability really works: messy farm polygons, satellite time series, land-use evidence, and the chain of records that links a plot to a shipment."
-readTime: "20 min read"
+readTime: "24 min read"
 tags: ["GIS", "Remote Sensing", "Geospatial Traceability", "GeoAI", "AgriTech", "EUDR"]
 category: "Research"
 author: "Mohd Salahudeen"
@@ -441,3 +441,60 @@ Three questions seem worth studying properly:
 All three can be designed, measured, and reproduced by a GIS team. They also separate an impressive map from a dependable traceability system.
 
 For me, that's the real test of geospatial traceability. **Can another analyst rebuild the location, the observations, the material flow, and the reasoning behind a decision, and point to exactly where the evidence runs out?**
+
+## Questions readers asked
+
+After this went up, a reader sent five sharp questions. Others will probably ask the same things, so here are my answers. As in the rest of the piece, "I'd" means proposed design, not a system I operate.
+
+### Do you monitor the forest or the farm?
+
+The farm first, because that's the question EUDR asks: was *this plot* deforested after 31 December 2020? A farm that was forest in 2020 and is rubber today fails, however clean its paperwork.
+
+The gap is leakage. A declared plot stays clean while forest next door is cleared, and plot-only monitoring won't see it. I'd add three things:
+
+- **A buffer ring** a few hundred metres wide around each plot. Alerts in the ring raise the plot's risk and trigger review. They don't prove anything on their own.
+- **Comparison between geometry versions.** If a polygon later grows into land that was forest in 2020, the difference between versions shows it. That's one reason the intake design in section 4 keeps old versions.
+- **Landscape context** from regional maps and alerts. It informs risk, but the sourcing decision still rests on plot evidence.
+
+### Isn't open satellite data too coarse for small changes?
+
+Often, yes. Sentinel-2's sharpest bands are 10 m and Landsat's are 30 m, and the arithmetic in section 4 shows how few pixels sit fully inside a one-hectare farm. Thinning, or removing a handful of trees, can stay invisible.
+
+What helps most is time and agreement, not just sharper pixels. RADD's radar sees through cloud, and its validation covers disturbances of about 0.2 ha and larger. [Reiche et al., 2021](https://iopscience.iop.org/article/10.1088/1748-9326/abd0a8) A dense time series can confirm a change that one image can't. Integrated alerts and Whisp combine datasets to cut false alarms.
+
+Below the detectable size, satellites can't decide. That's where finer imagery, drones, or a field visit come in. **I'd want any system to state its minimum detectable change** rather than imply it sees everything.
+
+### What if a farmer cuts forest and declares their own land?
+
+A phone fix proves where the phone was when the boundary was walked. It doesn't prove where a load came from. The Commission says operators must verify, and be able to prove, that geolocation is correct. [European Commission EUDR FAQ, v5, Q1.12](https://transition-pathways.europa.eu/system/files/media/document/2026-08/FAQ-UPDATE-5th-Iteration-EN.pdf) There's no single test for this kind of fraud, but these checks raise its cost and tell auditors where to look:
+
+- **Supply capacity.** Plot area times a realistic yield caps what a plot can deliver, and deliveries above that cap get flagged. To me this is the strongest routine check, and it needs nothing more than the polygon and the purchase records.
+- **Does the plot actually produce it?** A time series can show whether the declared land holds mature rubber or other productive cover.
+- **Nearby clearance** during the delivery period, picked up by the buffer ring above.
+- **Timing** that doesn't match harvest or tapping seasons.
+- **Field audits targeted by risk**, not only at random.
+- **Wood forensics for timber.** Stable-isotope and trace-element methods can test origin claims, but at regional scale. A 2024 study predicted harvest location to within about 180–230 km and rejected 40–60% of simulated false claims. [Mortier et al., Nature Plants 2024](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC10954544/) That catches a false country or region, not a swap between neighbouring plots.
+
+For Indian smallholders, the simplified regime in section 2 makes this harder. A postal address can't be checked against a satellite time series.
+
+### How do you detect legal and illegal material being mixed?
+
+Not with satellites. It's a custody and accounting problem.
+
+EUDR is strict here. The Commission's FAQ rules out mass-balance chains that mix deforestation-free goods with goods of unknown origin at any step, and requires segregation throughout. If a non-compliant part can't be separated out, the whole product is non-compliant. [European Commission EUDR FAQ, v5, Q1.4–1.5](https://transition-pathways.europa.eu/system/files/media/document/2026-08/FAQ-UPDATE-5th-Iteration-EN.pdf) That's why BSNR keeps EUDR and non-EUDR material in separate storage.
+
+Detection means reconciling quantities at every step: inputs, outputs, conversion ratios, and losses, as in the blend in section 8. Then compare what left each collection point with what its supplying plots could have produced. **Output that outgrows its plots' capacity is the classic sign of mixing.** A ledger makes those records tamper-evident. Only physical stock checks show whether they're true.
+
+### Won't this need huge storage, and isn't fine imagery too expensive?
+
+Storage is smaller than it looks. As an illustration, a polygon with 50 vertices holds under a kilobyte of coordinates, so a million plots fit in a few gigabytes with their metadata. Supply-chain events are similarly small.
+
+Imagery is the heavy part, and you don't need to own it. Public archives such as [Copernicus Data Space](https://documentation.dataspace.copernicus.eu/Data/SentinelMissions/Sentinel2.html) and [Earth Search](https://element84.com/earth-search/examples) hold it as cloud-optimised files, and a STAC search fetches only the window around each plot. Alert products like GFW's integrated alerts are already computed for whole regions, so checking a million polygons against them is an ordinary spatial join. Keep the results and their lineage, not the rasters.
+
+For cost, I'd tier the evidence:
+
+1. **Free 10–30 m data and alerts** screen every plot.
+2. **Commercial very-high-resolution imagery**, from the archive or newly tasked, only for the share that's flagged or disputed.
+3. **Drones or field visits** for whatever stays unresolved.
+
+Shared programmes spread the cost further. A cooperative, a commodity board, or several buyers can pay for one set of imagery. The 2020 baseline can only come from archive scenes, since nobody can task a satellite over the past. That's another reason to buy narrowly.
