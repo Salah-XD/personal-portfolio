@@ -216,4 +216,74 @@ const giscusReady = giscusRepo && giscusRepoId && giscusCategory && giscusCatego
       },
     ])}
   />
+
+  <script>
+    // Render ```mermaid fences client-side. Shiki leaves them as
+    // <pre data-language="mermaid">; the library is only fetched when a post has one.
+    const blocks = Array.from(document.querySelectorAll<HTMLElement>('pre[data-language="mermaid"]'));
+
+    if (blocks.length > 0) {
+      const diagrams = blocks.map((pre) => {
+        const container = document.createElement('div');
+        container.className = 'mermaid-diagram not-prose my-8 overflow-x-auto';
+        container.setAttribute('role', 'img');
+        container.setAttribute('aria-label', 'Diagram');
+        pre.insertAdjacentElement('afterend', container);
+        pre.hidden = true;
+        // Read from <code>: the copy-button script appends UI text to the <pre> itself.
+        const source = (pre.querySelector('code') ?? pre).textContent ?? '';
+        return { pre, container, source };
+      });
+
+      const { default: mermaid } = await import('mermaid');
+      let run = 0;
+
+      const renderAll = async () => {
+        const current = ++run;
+        const isDark = document.documentElement.classList.contains('dark');
+        mermaid.initialize({
+          startOnLoad: false,
+          securityLevel: 'strict',
+          theme: isDark ? 'dark' : 'default',
+          fontFamily: 'inherit',
+        });
+
+        for (const [i, d] of diagrams.entries()) {
+          try {
+            const { svg } = await mermaid.render(`mermaid-${current}-${i}`, d.source);
+            if (current !== run) return;
+            d.container.innerHTML = svg;
+            // Keep wide diagrams legible on phones: scroll sideways instead of shrinking text.
+            const el = d.container.querySelector('svg');
+            if (el) {
+              const naturalWidth = el.viewBox.baseVal?.width || 0;
+              el.style.display = 'block';
+              el.style.margin = '0 auto';
+              if (naturalWidth) el.style.minWidth = `${Math.min(naturalWidth, 560)}px`;
+            }
+            d.container.hidden = false;
+            d.pre.hidden = true;
+          } catch {
+            // Fall back to showing the diagram source rather than a blank gap.
+            d.container.hidden = true;
+            d.pre.hidden = false;
+          }
+        }
+      };
+
+      await renderAll();
+
+      // Lenis also toggles classes on <html>, so only re-render on a theme flip.
+      let wasDark = document.documentElement.classList.contains('dark');
+      new MutationObserver(() => {
+        const isDark = document.documentElement.classList.contains('dark');
+        if (isDark === wasDark) return;
+        wasDark = isDark;
+        renderAll();
+      }).observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+      });
+    }
+  </script>
 </Layout>
